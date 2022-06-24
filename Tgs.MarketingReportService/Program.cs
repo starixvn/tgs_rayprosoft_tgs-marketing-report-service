@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration
@@ -5,10 +7,19 @@ builder.Configuration
     .AddEnvironmentVariables();
 
 builder.Services
-    .AddRouting(options => options.LowercaseUrls = true)
-    .AddControllers();
+    .AddMarketingReportCore()
+    .AddMarketingReportRepository((sp, dbBuilder) =>
+    {
+        var connectionString = sp.GetRequiredService<IConfiguration>().GetConnectionString("Tgs");
+        _ = dbBuilder.UseNpgsql(connectionString);
+    });
 
-builder.Services.AddSwaggerGen();
+builder.Services
+    .AddRouting(options => options.LowercaseUrls = true)
+    .AddControllers(options => options.UseDateOnlyTimeOnlyStringConverters())
+    .AddJsonOptions(options => options.UseDateOnlyTimeOnlyStringConverters());
+
+builder.Services.AddSwaggerGen(c => c.UseDateOnlyTimeOnlyStringConverters());
 
 builder.Services.AddHealthChecks();
 
