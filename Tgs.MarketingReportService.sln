@@ -5,9 +5,9 @@ VisualStudioVersion = 17.2.32519.379
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.MarketingReportService", "Tgs.MarketingReportService\Tgs.MarketingReportService.csproj", "{0E50EC38-BAF9-49CD-8129-663674B814CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgs.MarketingReport.Core", "Tgs.MarketingReport.Core\Tgs.MarketingReport.Core.csproj", "{BB6EE9E6-36BE-4D90-B629-C857FA7629A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.MarketingReport.Core", "Tgs.MarketingReport.Core\Tgs.MarketingReport.Core.csproj", "{BB6EE9E6-36BE-4D90-B629-C857FA7629A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgs.MarketingReport.Repositories", "Tgs.MarketingReport.Repositories\Tgs.MarketingReport.Repositories.csproj", "{9EEBB93B-D75B-4334-9ED1-36AC7519ABDA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.MarketingReport.Repositories", "Tgs.MarketingReport.Repositories\Tgs.MarketingReport.Repositories.csproj", "{9EEBB93B-D75B-4334-9ED1-36AC7519ABDA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C688D1D9-309B-46D8-828F-D11A465E9031}"
 	ProjectSection(SolutionItems) = preProject
@@ -16,7 +16,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		nuget.config = nuget.config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgs.MarketingReport.Core.UnitTests", "Tgs.MarketingReport.Core.UnitTests\Tgs.MarketingReport.Core.UnitTests.csproj", "{E86BB8D7-9DD0-49A6-92A3-565A4A5EE0A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.MarketingReport.Core.UnitTests", "Tgs.MarketingReport.Core.UnitTests\Tgs.MarketingReport.Core.UnitTests.csproj", "{E86BB8D7-9DD0-49A6-92A3-565A4A5EE0A7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.MarketingReport.Client", "Tgs.MarketingReport.Client\Tgs.MarketingReport.Client.csproj", "{7B6AB41A-363A-42D1-9570-978E09C2F2E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgs.MarketingReport.IntegrationTests", "Tgs.MarketingReport.IntegrationTests\Tgs.MarketingReport.IntegrationTests.csproj", "{67928BEE-DD25-4696-BFBC-315F1174F324}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,6 +44,14 @@ Global
 		{E86BB8D7-9DD0-49A6-92A3-565A4A5EE0A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E86BB8D7-9DD0-49A6-92A3-565A4A5EE0A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E86BB8D7-9DD0-49A6-92A3-565A4A5EE0A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B6AB41A-363A-42D1-9570-978E09C2F2E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B6AB41A-363A-42D1-9570-978E09C2F2E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B6AB41A-363A-42D1-9570-978E09C2F2E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B6AB41A-363A-42D1-9570-978E09C2F2E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67928BEE-DD25-4696-BFBC-315F1174F324}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67928BEE-DD25-4696-BFBC-315F1174F324}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67928BEE-DD25-4696-BFBC-315F1174F324}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67928BEE-DD25-4696-BFBC-315F1174F324}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
