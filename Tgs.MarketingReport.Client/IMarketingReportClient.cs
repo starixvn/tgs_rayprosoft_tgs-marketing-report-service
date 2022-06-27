@@ -7,4 +7,11 @@ public interface IMarketingReportClient
         DateOnly startDate,
         DateOnly endDate,
         CancellationToken cancellationToken = default);
+
+    public IAsyncEnumerable<MarketingReportDailyAggregateInfo> GetMarketingReportDailyAggregateInfosAsync(
+        Guid brandId,
+        Guid agentId,
+        DateOnly startDate,
+        DateOnly endDate,
+        CancellationToken cancellationToken = default);
 }

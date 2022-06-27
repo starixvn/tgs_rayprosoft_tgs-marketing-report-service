@@ -10,7 +10,7 @@ namespace Tgs.MarketingReportService.Controllers;
 [ApiController]
 public class MarketingReportController : ControllerBase
 {
-    [HttpGet("brand/{brandId}")]
+    [HttpGet("{brandId}", Name = "GetMarketingReportDailyAggregatesWithBrandId")]
     public async IAsyncEnumerable<MarketingReportDailyAggregateViewModel> GetMarketingReportDailyAggregateDataAsync(
         [FromServices] IQueryService<GetMarketingReportDailyAggregateQuery, MarketingReportDailyAggregateInfo> queryService,
         Guid brandId,
@@ -18,6 +18,28 @@ public class MarketingReportController : ControllerBase
         DateOnly endDate)
     {
         var query = new GetMarketingReportDailyAggregateQuery(brandId, startDate, endDate);
+
+        await foreach (var info in queryService.QueryAsync(query, HttpContext.RequestAborted))
+            yield return new MarketingReportDailyAggregateViewModel
+            {
+                AgentId = info.AgentId,
+                AgentUserName = info.AgentUserName,
+                FirstDepositCount = info.FirstDepositCount,
+                GamingCount = info.GamingCount,
+                RegisterCount = info.RegisterCount,
+                ReportDate = info.ReportDate
+            };
+    }
+
+    [HttpGet("{brandId}/{agentId}", Name = "GetMarketingReportDailyAggregatesWithAgentId")]
+    public async IAsyncEnumerable<MarketingReportDailyAggregateViewModel> GetMarketingReportDailyAggregateDataAsync(
+        [FromServices] IQueryService<GetMarketingReportDailyAggregateByAgentQuery, MarketingReportDailyAggregateInfo> queryService,
+        Guid brandId,
+        Guid agentId,
+        DateOnly startDate,
+        DateOnly endDate)
+    {
+        var query = new GetMarketingReportDailyAggregateByAgentQuery(brandId, agentId, startDate, endDate);
 
         await foreach (var info in queryService.QueryAsync(query, HttpContext.RequestAborted))
             yield return new MarketingReportDailyAggregateViewModel

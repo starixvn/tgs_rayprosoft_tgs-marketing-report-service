@@ -32,7 +32,30 @@ internal class MarketingReportClient : IMarketingReportClient
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var response = await _httpClient
-            .GetAsync($"/marketingreport/brand/{brandId}?startDate={startDate:yyyy-MM-dd}&endDate={endDate:yyyy-MM-dd}", cancellationToken)
+            .GetAsync($"/marketingreport/{brandId}?startDate={startDate:yyyy-MM-dd}&endDate={endDate:yyyy-MM-dd}", cancellationToken)
+            .ConfigureAwait(false);
+
+        _ = response.EnsureSuccessStatusCode();
+
+        var contentJson = await response.Content
+            .ReadAsStringAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        var aggregateInfos = JsonSerializer.Deserialize<MarketingReportDailyAggregateInfo[]>(contentJson, _SerializerOptions);
+
+        foreach (var info in aggregateInfos!)
+            yield return info;
+    }
+
+    public async IAsyncEnumerable<MarketingReportDailyAggregateInfo> GetMarketingReportDailyAggregateInfosAsync(
+        Guid brandId,
+        Guid agentId,
+        DateOnly startDate,
+        DateOnly endDate,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        var response = await _httpClient
+            .GetAsync($"/marketingreport/{brandId}/{agentId}?startDate={startDate:yyyy-MM-dd}&endDate={endDate:yyyy-MM-dd}", cancellationToken)
             .ConfigureAwait(false);
 
         _ = response.EnsureSuccessStatusCode();
