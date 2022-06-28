@@ -6,7 +6,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>23f2779f-4965-4fad-b52e-bf52aca12701</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileBuildArguments>--build-arg "BuildConfiguration=$(Configuration)"</DockerfileBuildArguments>
+    <GlobalNugetConfig>$(UserProfile)\AppData\Roaming\NuGet\NuGet.Config</GlobalNugetConfig>
+    <GlobalNugetConfig Condition="'$(UserProfile)'==''">$(HOME)/.nuget/NuGet/NuGet.Config</GlobalNugetConfig>
+    <DockerfileBuildArguments>--build-arg "BuildConfiguration=$(Configuration)" --secret id=nuget,src="$(GlobalNugetConfig)"</DockerfileBuildArguments>
+
     <DockerfileTag Condition="$(DockerfileTag) == ''">marketing-report-api</DockerfileTag>
   </PropertyGroup>
 
