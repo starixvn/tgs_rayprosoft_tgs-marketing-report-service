@@ -31,7 +31,9 @@ builder.Services
     {
         var connectionString = sp.GetRequiredService<IConfiguration>().GetConnectionString("Tgs");
         _ = dbBuilder.UseNpgsql(connectionString);
-    });
+    })
+    .AddMemoryCache()
+    .AddMarketingReportCache();
 
 builder.Services
     .AddRouting(options => options.LowercaseUrls = true)
