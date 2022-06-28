@@ -12,12 +12,12 @@ public class MarketingReportController : ControllerBase
 {
     [HttpGet("{brandId}", Name = "GetMarketingReportDailyAggregatesWithBrandId")]
     public async IAsyncEnumerable<MarketingReportDailyAggregateViewModel> GetMarketingReportDailyAggregateDataAsync(
-        [FromServices] IQueryService<GetMarketingReportDailyAggregateQuery, MarketingReportDailyAggregateInfo> queryService,
+        [FromServices] IQueryService<GetDailyAggregateInfosQuery, DailyAggregateInfo> queryService,
         Guid brandId,
         DateOnly startDate,
         DateOnly endDate)
     {
-        var query = new GetMarketingReportDailyAggregateQuery(brandId, startDate, endDate);
+        var query = new GetDailyAggregateInfosQuery(brandId, startDate, endDate);
 
         await foreach (var info in queryService.QueryAsync(query, HttpContext.RequestAborted))
             yield return new MarketingReportDailyAggregateViewModel
@@ -33,13 +33,13 @@ public class MarketingReportController : ControllerBase
 
     [HttpGet("{brandId}/{agentId}", Name = "GetMarketingReportDailyAggregatesWithAgentId")]
     public async IAsyncEnumerable<MarketingReportDailyAggregateViewModel> GetMarketingReportDailyAggregateDataAsync(
-        [FromServices] IQueryService<GetMarketingReportDailyAggregateByAgentQuery, MarketingReportDailyAggregateInfo> queryService,
+        [FromServices] IQueryService<GetDailyAggregateInfosByAgentQuery, DailyAggregateInfo> queryService,
         Guid brandId,
         Guid agentId,
         DateOnly startDate,
         DateOnly endDate)
     {
-        var query = new GetMarketingReportDailyAggregateByAgentQuery(brandId, agentId, startDate, endDate);
+        var query = new GetDailyAggregateInfosByAgentQuery(brandId, agentId, startDate, endDate);
 
         await foreach (var info in queryService.QueryAsync(query, HttpContext.RequestAborted))
             yield return new MarketingReportDailyAggregateViewModel

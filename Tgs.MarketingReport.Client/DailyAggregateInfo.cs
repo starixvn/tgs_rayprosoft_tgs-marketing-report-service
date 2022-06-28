@@ -1,6 +1,6 @@
 ﻿namespace Tgs.MarketingReport.Client;
 
-public record MarketingReportDailyAggregateInfo
+public record DailyAggregateInfo
 {
     public Guid AgentId { get; init; }
 

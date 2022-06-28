@@ -1,6 +1,6 @@
 ﻿namespace Tgs.MarketingReport.Core.ApplicationServices;
 
-public record GetMarketingReportDailyAggregateByAgentQuery(
+public record GetDailyAggregateInfosByAgentQuery(
     Guid BrandId,
     Guid AgentId,
     DateOnly StartDate,

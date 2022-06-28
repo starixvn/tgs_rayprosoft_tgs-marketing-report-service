@@ -25,7 +25,7 @@ internal class MarketingReportClient : IMarketingReportClient
         _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
     }
 
-    public async IAsyncEnumerable<MarketingReportDailyAggregateInfo> GetMarketingReportDailyAggregateInfosAsync(
+    public async IAsyncEnumerable<DailyAggregateInfo> GetDailyAggregateInfosAsync(
         Guid brandId,
         DateOnly startDate,
         DateOnly endDate,
@@ -41,13 +41,13 @@ internal class MarketingReportClient : IMarketingReportClient
             .ReadAsStringAsync(cancellationToken)
             .ConfigureAwait(false);
 
-        var aggregateInfos = JsonSerializer.Deserialize<MarketingReportDailyAggregateInfo[]>(contentJson, _SerializerOptions);
+        var aggregateInfos = JsonSerializer.Deserialize<DailyAggregateInfo[]>(contentJson, _SerializerOptions);
 
         foreach (var info in aggregateInfos!)
             yield return info;
     }
 
-    public async IAsyncEnumerable<MarketingReportDailyAggregateInfo> GetMarketingReportDailyAggregateInfosAsync(
+    public async IAsyncEnumerable<DailyAggregateInfo> GetDailyAggregateInfosAsync(
         Guid brandId,
         Guid agentId,
         DateOnly startDate,
@@ -64,7 +64,7 @@ internal class MarketingReportClient : IMarketingReportClient
             .ReadAsStringAsync(cancellationToken)
             .ConfigureAwait(false);
 
-        var aggregateInfos = JsonSerializer.Deserialize<MarketingReportDailyAggregateInfo[]>(contentJson, _SerializerOptions);
+        var aggregateInfos = JsonSerializer.Deserialize<DailyAggregateInfo[]>(contentJson, _SerializerOptions);
 
         foreach (var info in aggregateInfos!)
             yield return info;

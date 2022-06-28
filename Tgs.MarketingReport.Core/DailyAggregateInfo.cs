@@ -1,6 +1,6 @@
 ﻿namespace Tgs.MarketingReport.Core;
 
-public record MarketingReportDailyAggregateInfo(
+public record DailyAggregateInfo(
     Guid AgentId,
     string AgentUserName,
     DateOnly ReportDate,

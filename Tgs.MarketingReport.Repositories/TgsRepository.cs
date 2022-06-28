@@ -14,7 +14,7 @@ internal class TgsRepository : ITgsRepository
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public IAsyncEnumerable<MarketingReportDailyAggregateInfo> GetMarketingReportDailyAggregateInfosAsync(
+    public IAsyncEnumerable<DailyAggregateInfo> GetDailyAggregateInfosAsync(
         Guid brandId,
         DateOnly startDate,
         DateOnly endDate)
@@ -22,7 +22,7 @@ internal class TgsRepository : ITgsRepository
             where aggregateInfo.ReportDate >= startDate && aggregateInfo.ReportDate < endDate
             join agent in _context.Agents on aggregateInfo.AgentId equals agent.Id
             where agent.BrandId == brandId
-            select new MarketingReportDailyAggregateInfo(
+            select new DailyAggregateInfo(
                 agent.Id,
                 agent.Username,
                 aggregateInfo.ReportDate,

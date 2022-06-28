@@ -2,13 +2,13 @@
 
 public interface IMarketingReportClient
 {
-    public IAsyncEnumerable<MarketingReportDailyAggregateInfo> GetMarketingReportDailyAggregateInfosAsync(
+    public IAsyncEnumerable<DailyAggregateInfo> GetDailyAggregateInfosAsync(
         Guid brandId,
         DateOnly startDate,
         DateOnly endDate,
         CancellationToken cancellationToken = default);
 
-    public IAsyncEnumerable<MarketingReportDailyAggregateInfo> GetMarketingReportDailyAggregateInfosAsync(
+    public IAsyncEnumerable<DailyAggregateInfo> GetDailyAggregateInfosAsync(
         Guid brandId,
         Guid agentId,
         DateOnly startDate,

@@ -2,7 +2,7 @@
 
 public interface ITgsRepository
 {
-    IAsyncEnumerable<MarketingReportDailyAggregateInfo> GetMarketingReportDailyAggregateInfosAsync(
+    IAsyncEnumerable<DailyAggregateInfo> GetDailyAggregateInfosAsync(
         Guid brandId,
         DateOnly startDate,
         DateOnly endDate);
