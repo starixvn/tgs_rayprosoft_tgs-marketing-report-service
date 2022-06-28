@@ -48,13 +48,9 @@ spec:
                   name: tgs-connections
                   key: tgs
             - name: Schedule__ExecuteTime
-              value: 06:00
+              value: 06:00:00
             - name: DOTNET_DiagnosticPorts
               value: /diag/port
-          ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
           volumeMounts:
             - mountPath: /config/appsettings.json
               name: appsettings
@@ -64,6 +60,10 @@ spec:
               name: diagvol
             - mountPath: /dumps
               name: dumpsvol
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
           livenessProbe:
             httpGet:
               path: /healthz
