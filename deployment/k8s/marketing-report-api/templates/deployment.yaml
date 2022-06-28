@@ -36,7 +36,7 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-          　- name: OTEL_SERVICE_NAME
+            - name: OTEL_SERVICE_NAME
               value: Marketing-Report-Api({{ .Release.Namespace }})
             - name: NODE_IP
               valueFrom:
