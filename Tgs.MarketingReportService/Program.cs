@@ -26,7 +26,11 @@ builder.Logging
     });
 
 builder.Services
-    .AddMarketingReportCore()
+    .AddMarketingReportCore((options, sp) =>
+    {
+        var time = sp.GetRequiredService<IConfiguration>().GetValue<string>("Schedule:ExecuteTime");
+        options.ExecuteTime = TimeOnly.Parse(time);
+    })
     .AddMarketingReportRepository((sp, dbBuilder) =>
     {
         var connectionString = sp.GetRequiredService<IConfiguration>().GetConnectionString("Tgs");

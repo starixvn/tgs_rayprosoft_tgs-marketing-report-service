@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using Tgs.MarketingReport.Core.ApplicationServices;
 using Tgs.ServiceUtility;
 
@@ -12,13 +8,18 @@ namespace Tgs.MarketingReport.Core.Cache;
 
 internal class GetCachedDailyAggregateInfosQueryService : IQueryService<GetDailyAggregateInfosQuery, DailyAggregateInfo>
 {
+    private static readonly TimeSpan _EightHourTimeSpan = TimeSpan.FromHours(8D);
+
     private readonly IMemoryCache _memoryCache;
+    private readonly ScheduleOptions _scheduleOptions;
     private readonly IQueryService<GetDailyAggregateInfosQuery, DailyAggregateInfo> _sourceService;
 
     public GetCachedDailyAggregateInfosQueryService(
+        IOptions<ScheduleOptions> options,
         IQueryService<GetDailyAggregateInfosQuery, DailyAggregateInfo> sourceService,
         IMemoryCache memoryCache)
     {
+        _scheduleOptions = options.Value;
         _sourceService = sourceService ?? throw new ArgumentNullException(nameof(sourceService));
         _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
     }
@@ -35,12 +36,42 @@ internal class GetCachedDailyAggregateInfosQueryService : IQueryService<GetDaily
                 .ToArrayAsync(cancellationToken)
                 .ConfigureAwait(false);
 
-            entry.AbsoluteExpiration = DateTimeOffset.UtcNow.AddDays(1).ToOffset(TimeSpan.FromHours(8));
+            var expiration = GetExpiration(query.StartDate, query.EndDate);
+
+            entry.AbsoluteExpiration = expiration;
 
             return infos;
         }).ConfigureAwait(false);
 
         foreach (var info in aggregateInfos)
             yield return info;
+    }
+
+    private DateTimeOffset GetExpiration(DateOnly startDate, DateOnly endDate)
+    {
+        var start = new DateTimeOffset(startDate.Year, startDate.Month, startDate.Day, 0, 0, 0, _EightHourTimeSpan);
+        var end = new DateTimeOffset(endDate.Year, endDate.Month, endDate.Day, 0, 0, 0, _EightHourTimeSpan);
+
+        var now = DateTimeOffset.UtcNow.ToOffset(_EightHourTimeSpan);
+        var scheduleTime = new DateTimeOffset(
+            now.Year,
+            now.Month,
+            now.Day + 1,
+            _scheduleOptions.ExecuteTime.Hour,
+            _scheduleOptions.ExecuteTime.Minute,
+            0,
+            _EightHourTimeSpan);
+
+        if (start > scheduleTime)
+            return now.AddDays(1D);
+
+        if (end >= scheduleTime)
+            return scheduleTime;
+
+        var diffSeconds = (scheduleTime - now).TotalSeconds;
+        if (diffSeconds > 24 * 60 * 60)
+            return now.AddDays(1D);
+
+        return scheduleTime;
     }
 }

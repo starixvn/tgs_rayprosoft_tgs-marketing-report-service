@@ -9,7 +9,8 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddMarketingReportCache(this IServiceCollection services)
+    public static IServiceCollection AddMarketingReportCache(
+        this IServiceCollection services)
         => services
             .Decorate<IQueryService<GetDailyAggregateInfosQuery, DailyAggregateInfo>,
                 GetCachedDailyAggregateInfosQueryService>();
