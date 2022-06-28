@@ -28,8 +28,8 @@ builder.Logging
 builder.Services
     .AddMarketingReportCore((options, sp) =>
     {
-        var time = sp.GetRequiredService<IConfiguration>().GetValue<string>("Schedule:ExecuteTime");
-        options.ExecuteTime = TimeOnly.Parse(time);
+        var config = sp.GetRequiredService<IConfiguration>();
+        config.GetSection("Schedule").Bind(options);
     })
     .AddMarketingReportRepository((sp, dbBuilder) =>
     {
