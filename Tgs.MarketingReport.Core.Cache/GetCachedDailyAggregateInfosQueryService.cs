@@ -56,11 +56,12 @@ internal class GetCachedDailyAggregateInfosQueryService : IQueryService<GetDaily
         var scheduleTime = new DateTimeOffset(
             now.Year,
             now.Month,
-            now.Day + 1,
+            now.Day,
             _scheduleOptions.ExecuteTime.Hour,
             _scheduleOptions.ExecuteTime.Minute,
             0,
-            _EightHourTimeSpan);
+            _EightHourTimeSpan)
+            .AddDays(1);
 
         if (start > scheduleTime)
             return now.AddDays(1D);
