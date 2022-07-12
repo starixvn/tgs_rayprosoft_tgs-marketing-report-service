@@ -8,7 +8,7 @@ namespace Tgs.MarketingReport.Core.Cache;
 
 internal class GetCachedDailyAggregateInfosQueryService : IQueryService<GetDailyAggregateInfosQuery, DailyAggregateInfo>
 {
-    private static readonly TimeSpan _EightHourTimeSpan = TimeSpan.FromHours(8D);
+    private static readonly TimeSpan _Offset = TimeSpan.FromHours(8D);
 
     private readonly IMemoryCache _memoryCache;
     private readonly ScheduleOptions _scheduleOptions;
@@ -27,52 +27,49 @@ internal class GetCachedDailyAggregateInfosQueryService : IQueryService<GetDaily
     public async IAsyncEnumerable<DailyAggregateInfo> QueryAsync(GetDailyAggregateInfosQuery query,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        var key = $"DailyAggregate:Brand:{query.BrandId}:{query.StartDate}:{query.EndDate}";
+        var currentDate = DateOnly.FromDateTime(DateTimeOffset.UtcNow.ToOffset(_Offset).DateTime);
+
+        var key = $"DailyAggregate:Brand:{query.BrandId}:{currentDate}";
 
         var aggregateInfos = await _memoryCache.GetOrCreateAsync(key, async entry =>
         {
+            var dataQuery = new GetDailyAggregateInfosQuery(
+                query.BrandId,
+                currentDate.AddDays(-91),
+                currentDate);
+
             var infos = await _sourceService
-                .QueryAsync(query, cancellationToken)
+                .QueryAsync(dataQuery, cancellationToken)
                 .ToArrayAsync(cancellationToken)
                 .ConfigureAwait(false);
 
-            var expiration = GetExpiration(query.StartDate, query.EndDate);
+            var expiration = GetExpiration();
 
             entry.AbsoluteExpiration = expiration;
 
             return infos;
         }).ConfigureAwait(false);
 
-        foreach (var info in aggregateInfos)
+        foreach (var info in aggregateInfos
+                     .Where(info => info.ReportDate >= query.StartDate &&
+                                    info.ReportDate < query.EndDate))
+        {
             yield return info;
+        }
     }
 
-    private DateTimeOffset GetExpiration(DateOnly startDate, DateOnly endDate)
+    private DateTimeOffset GetExpiration()
     {
-        var start = new DateTimeOffset(startDate.Year, startDate.Month, startDate.Day, 0, 0, 0, _EightHourTimeSpan);
-        var end = new DateTimeOffset(endDate.Year, endDate.Month, endDate.Day, 0, 0, 0, _EightHourTimeSpan);
-
-        var now = DateTimeOffset.UtcNow.ToOffset(_EightHourTimeSpan);
-        var scheduleTime = new DateTimeOffset(
+        var now = DateTimeOffset.UtcNow.ToOffset(_Offset);
+        var todayScheduleTime = new DateTimeOffset(
             now.Year,
             now.Month,
             now.Day,
             _scheduleOptions.ExecuteTime.Hour,
             _scheduleOptions.ExecuteTime.Minute,
             0,
-            _EightHourTimeSpan)
-            .AddDays(1);
+            _Offset);
 
-        if (start > scheduleTime)
-            return now.AddDays(1D);
-
-        if (end >= scheduleTime)
-            return scheduleTime;
-
-        var diffSeconds = (scheduleTime - now).TotalSeconds;
-        if (diffSeconds > 24 * 60 * 60)
-            return now.AddDays(1D);
-
-        return scheduleTime;
+        return now < todayScheduleTime ? todayScheduleTime : now.AddDays(1);
     }
 }
