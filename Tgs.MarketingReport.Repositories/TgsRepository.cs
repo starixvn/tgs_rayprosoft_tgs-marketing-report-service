@@ -24,7 +24,6 @@ internal class TgsRepository : ITgsRepository
             where agent.BrandId == brandId
             select new DailyAggregateInfo(
                 agent.Id,
-                agent.Username,
                 aggregateInfo.ReportDate,
                 aggregateInfo.RegisterCount,
                 aggregateInfo.FirstDepositCount,

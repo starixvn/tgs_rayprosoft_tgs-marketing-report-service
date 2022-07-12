@@ -28,7 +28,6 @@ internal class MarketingReportTests
             new DailyAggregateInfo
             {
                 AgentId = agentId,
-                AgentUserName = agentUserName,
                 FirstDepositCount = 0,
                 GamingCount = 0,
                 RegisterCount = 2,
@@ -37,7 +36,6 @@ internal class MarketingReportTests
             new DailyAggregateInfo
             {
                 AgentId = agentId,
-                AgentUserName = agentUserName,
                 FirstDepositCount = 0,
                 GamingCount = 10,
                 RegisterCount = 3,
@@ -147,7 +145,6 @@ internal class MarketingReportTests
             new DailyAggregateInfo
             {
                 AgentId = agentId,
-                AgentUserName = agentUserName,
                 FirstDepositCount = 0,
                 GamingCount = 0,
                 RegisterCount = 2,
@@ -156,7 +153,6 @@ internal class MarketingReportTests
             new DailyAggregateInfo
             {
                 AgentId = agentId,
-                AgentUserName = agentUserName,
                 FirstDepositCount = 0,
                 GamingCount = 10,
                 RegisterCount = 3,
