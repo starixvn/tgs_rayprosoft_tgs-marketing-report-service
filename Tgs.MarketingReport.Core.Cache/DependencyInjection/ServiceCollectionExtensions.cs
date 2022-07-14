@@ -12,6 +12,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddMarketingReportCache(
         this IServiceCollection services)
         => services
+            .AddSingleton<ISystemClock, DefaultSystemClock>()
             .Decorate<IQueryService<GetDailyAggregateInfosQuery, DailyAggregateInfo>,
-                GetCachedDailyAggregateInfosQueryService>();
+                GetMemoryCachedDailyAggregateInfosQueryService>();
 }

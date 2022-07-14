@@ -22,7 +22,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.MarketingReport.Client"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.MarketingReport.IntegrationTests", "Tgs.MarketingReport.IntegrationTests\Tgs.MarketingReport.IntegrationTests.csproj", "{67928BEE-DD25-4696-BFBC-315F1174F324}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgs.MarketingReport.Core.Cache", "Tgs.MarketingReport.Core.Cache\Tgs.MarketingReport.Core.Cache.csproj", "{346D8BA4-8C31-4513-973A-B63ACAC9D78B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.MarketingReport.Core.Cache", "Tgs.MarketingReport.Core.Cache\Tgs.MarketingReport.Core.Cache.csproj", "{346D8BA4-8C31-4513-973A-B63ACAC9D78B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgs.MarketingReport.Core.Cache.UnitTests", "Tgs.MarketingReport.Core.Cache.UnitTests\Tgs.MarketingReport.Core.Cache.UnitTests.csproj", "{6AD5BF84-505F-495F-B5F0-DA5D4DF5566B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -58,6 +60,10 @@ Global
 		{346D8BA4-8C31-4513-973A-B63ACAC9D78B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{346D8BA4-8C31-4513-973A-B63ACAC9D78B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{346D8BA4-8C31-4513-973A-B63ACAC9D78B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AD5BF84-505F-495F-B5F0-DA5D4DF5566B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AD5BF84-505F-495F-B5F0-DA5D4DF5566B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AD5BF84-505F-495F-B5F0-DA5D4DF5566B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AD5BF84-505F-495F-B5F0-DA5D4DF5566B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
