@@ -4,8 +4,6 @@ public class MarketingReportDailyAggregateViewModel
 {
     public Guid AgentId { get; init; }
 
-    public string AgentUserName { get; init; } = default!;
-
     public int FirstDepositCount { get; init; }
 
     public int GamingCount { get; init; }

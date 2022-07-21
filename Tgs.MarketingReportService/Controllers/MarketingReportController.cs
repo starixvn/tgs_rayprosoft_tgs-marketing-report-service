@@ -23,7 +23,6 @@ public class MarketingReportController : ControllerBase
             yield return new MarketingReportDailyAggregateViewModel
             {
                 AgentId = info.AgentId,
-                AgentUserName = info.AgentUserName,
                 FirstDepositCount = info.FirstDepositCount,
                 GamingCount = info.GamingCount,
                 RegisterCount = info.RegisterCount,
@@ -45,7 +44,6 @@ public class MarketingReportController : ControllerBase
             yield return new MarketingReportDailyAggregateViewModel
             {
                 AgentId = info.AgentId,
-                AgentUserName = info.AgentUserName,
                 FirstDepositCount = info.FirstDepositCount,
                 GamingCount = info.GamingCount,
                 RegisterCount = info.RegisterCount,
