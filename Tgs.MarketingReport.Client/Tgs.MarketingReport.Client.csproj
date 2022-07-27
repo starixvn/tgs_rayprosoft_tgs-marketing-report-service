@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageId>Tgs.MarketingReport.Client</PackageId>
-    <Version>0.0.1-alpha</Version>
+    <Version>0.0.3</Version>
     <Authors>Raypro</Authors>
     <Product>Tgs.MarketingReport.Client</Product>
     <PackageProjectUrl>https://gitlab.com/rayprosoft/tgs-marketing-report-service</PackageProjectUrl>

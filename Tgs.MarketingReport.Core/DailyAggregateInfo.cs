@@ -2,7 +2,6 @@
 
 public record DailyAggregateInfo(
     Guid AgentId,
-    string AgentUserName,
     DateOnly ReportDate,
     int RegisterCount,
     int FirstDepositCount,
