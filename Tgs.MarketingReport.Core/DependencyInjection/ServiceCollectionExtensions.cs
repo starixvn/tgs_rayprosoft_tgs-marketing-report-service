@@ -1,7 +1,7 @@
 ﻿// ReSharper disable CheckNamespace
 
 using System.Reflection;
-using Tgs.MarketingReport.Core;
+using Tgs.MarketingReport;
 
 namespace Microsoft.Extensions.DependencyInjection;
 

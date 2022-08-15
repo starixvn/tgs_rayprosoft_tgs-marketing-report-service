@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Tgs.MarketingReport.Core;
-using Tgs.MarketingReport.Core.ApplicationServices;
 using Tgs.MarketingReportService.ViewModels;
 using Tgs.ServiceUtility;
+using Tgs.MarketingReport.ApplicationServices;
+using Tgs.MarketingReport;
 
 namespace Tgs.MarketingReportService.Controllers;
 
@@ -12,7 +12,7 @@ public class MarketingReportController : ControllerBase
 {
     [HttpGet("{brandId}", Name = "GetMarketingReportDailyAggregatesWithBrandId")]
     public async IAsyncEnumerable<MarketingReportDailyAggregateViewModel> GetMarketingReportDailyAggregateDataAsync(
-        [FromServices] IQueryService<GetDailyAggregateInfosQuery, DailyAggregateInfo> queryService,
+        [FromServices] IQueryService<GetDailyAggregateInfosQuery, AgentMarketingStatistics> queryService,
         Guid brandId,
         DateOnly startDate,
         DateOnly endDate)
@@ -23,7 +23,6 @@ public class MarketingReportController : ControllerBase
             yield return new MarketingReportDailyAggregateViewModel
             {
                 AgentId = info.AgentId,
-                FirstDepositCount = info.FirstDepositCount,
                 GamingCount = info.GamingCount,
                 RegisterCount = info.RegisterCount,
                 ReportDate = info.ReportDate
@@ -32,7 +31,7 @@ public class MarketingReportController : ControllerBase
 
     [HttpGet("{brandId}/{agentId}", Name = "GetMarketingReportDailyAggregatesWithAgentId")]
     public async IAsyncEnumerable<MarketingReportDailyAggregateViewModel> GetMarketingReportDailyAggregateDataAsync(
-        [FromServices] IQueryService<GetDailyAggregateInfosByAgentQuery, DailyAggregateInfo> queryService,
+        [FromServices] IQueryService<GetDailyAggregateInfosByAgentQuery, AgentMarketingStatistics> queryService,
         Guid brandId,
         Guid agentId,
         DateOnly startDate,
@@ -44,7 +43,7 @@ public class MarketingReportController : ControllerBase
             yield return new MarketingReportDailyAggregateViewModel
             {
                 AgentId = info.AgentId,
-                FirstDepositCount = info.FirstDepositCount,
+                FirstDepositCount = 0,
                 GamingCount = info.GamingCount,
                 RegisterCount = info.RegisterCount,
                 ReportDate = info.ReportDate
