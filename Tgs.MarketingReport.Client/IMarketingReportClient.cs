@@ -14,4 +14,6 @@ public interface IMarketingReportClient
         DateOnly startDate,
         DateOnly endDate,
         CancellationToken cancellationToken = default);
+
+    public IAsyncEnumerable<DailyAggregateInfo> QueryMarketingStatisticsAsync(Guid brandId, DateOnly queryDate, CancellationToken cancellationToken = default);
 }

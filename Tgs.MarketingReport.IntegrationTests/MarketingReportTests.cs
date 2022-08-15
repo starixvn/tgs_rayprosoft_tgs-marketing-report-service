@@ -28,7 +28,6 @@ internal class MarketingReportTests
             new DailyAggregateInfo
             {
                 AgentId = agentId,
-                FirstDepositCount = 0,
                 GamingCount = 0,
                 RegisterCount = 2,
                 ReportDate = DateOnly.Parse("2022-06-22")
@@ -36,7 +35,6 @@ internal class MarketingReportTests
             new DailyAggregateInfo
             {
                 AgentId = agentId,
-                FirstDepositCount = 0,
                 GamingCount = 10,
                 RegisterCount = 3,
                 ReportDate = DateOnly.Parse("2022-06-23")
@@ -145,7 +143,6 @@ internal class MarketingReportTests
             new DailyAggregateInfo
             {
                 AgentId = agentId,
-                FirstDepositCount = 0,
                 GamingCount = 0,
                 RegisterCount = 2,
                 ReportDate = DateOnly.Parse("2022-06-22")
@@ -153,7 +150,6 @@ internal class MarketingReportTests
             new DailyAggregateInfo
             {
                 AgentId = agentId,
-                FirstDepositCount = 0,
                 GamingCount = 10,
                 RegisterCount = 3,
                 ReportDate = DateOnly.Parse("2022-06-23")
@@ -219,5 +215,66 @@ internal class MarketingReportTests
             .ToArrayAsync();
 
         CollectionAssert.AreEqual(expected, actual);
+    }
+
+    [Test]
+    public async Task Query_Marketing_Report_By_Query_Date()
+    {
+        await using var web = new TestMarketingReportServiceApplication();
+
+        var httpClient = web.CreateClient();
+
+        var sut = new MarketingReportClient(httpClient);
+
+        var dbContext = web.Services.GetRequiredService<TgsContext>();
+
+        var agentId = Guid.NewGuid();
+        var brandId = Guid.NewGuid();
+
+        var expected = new[]
+        {
+            new DailyAggregateInfo
+            {
+                AgentId = agentId,
+                GamingCount = 0,
+                RegisterCount = 2,
+                ReportDate = DateOnly.Parse("2022-06-22")
+            },
+            new DailyAggregateInfo
+            {
+                AgentId = agentId,
+                GamingCount = 10,
+                RegisterCount = 3,
+                ReportDate = DateOnly.Parse("2022-06-23")
+            }
+        };
+
+        await dbContext.AgentDailyMarketingStatistics.AddRangeAsync(
+            new AgentDailyMarketingStatistic
+            {
+                AgentId = agentId,
+                BrandId = brandId,
+                GamingCount = 0,
+                RegisterCount = 2,
+                ReportDate = DateOnly.Parse("2022-06-22")
+            },
+            new AgentDailyMarketingStatistic
+            {
+                AgentId = agentId,
+                BrandId = brandId,
+                GamingCount = 10,
+                RegisterCount = 3,
+                ReportDate = DateOnly.Parse("2022-06-23")
+            });
+
+        _ = await dbContext.SaveChangesAsync();
+
+        var queryDate = DateOnly.Parse("2022-06-24");
+
+        var actual = await sut
+            .QueryMarketingStatisticsAsync(brandId, queryDate)
+            .ToArrayAsync();
+
+        CollectionAssert.AreEquivalent(expected, actual);
     }
 }

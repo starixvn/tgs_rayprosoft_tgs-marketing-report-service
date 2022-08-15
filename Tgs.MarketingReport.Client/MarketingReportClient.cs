@@ -69,4 +69,25 @@ internal class MarketingReportClient : IMarketingReportClient
         foreach (var info in aggregateInfos!)
             yield return info;
     }
+
+    public async IAsyncEnumerable<DailyAggregateInfo> QueryMarketingStatisticsAsync(
+        Guid brandId,
+        DateOnly queryDate,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        var response = await _httpClient
+            .GetAsync($"/report/marketing/{brandId}/{queryDate:yyyy-MM-dd}", cancellationToken)
+            .ConfigureAwait(false);
+
+        _ = response.EnsureSuccessStatusCode();
+
+        var contentJson = await response.Content
+            .ReadAsStringAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        var aggregateInfos = JsonSerializer.Deserialize<DailyAggregateInfo[]>(contentJson, _SerializerOptions);
+
+        foreach (var info in aggregateInfos!)
+            yield return info;
+    }
 }
