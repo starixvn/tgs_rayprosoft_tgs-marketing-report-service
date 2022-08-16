@@ -1,4 +1,5 @@
 ﻿using NSubstitute;
+using NUnit.Framework;
 using Tgs.MarketingReport.ApplicationServices;
 
 namespace Tgs.MarketingReport.Core.UnitTests;
@@ -6,7 +7,7 @@ namespace Tgs.MarketingReport.Core.UnitTests;
 public class MarketingReportTests
 {
     [Test]
-    public async Task Query_Agent_MarketingReportAsync()
+    public async Task Query_Agent_MarketingReport()
     {
         var fakeTgsRepository = Substitute.For<ITgsRepository>();
 
@@ -18,5 +19,20 @@ public class MarketingReportTests
 
         _ = fakeTgsRepository.Received(1)
             .QueryAgentMarketingStatisticsAsync(Arg.Is(query.BrandId), Arg.Is(query.QueryDate));
+    }
+
+    [Test]
+    public async Task Query_Player_Register_Detail()
+    {
+        var fakeTgsRepository = Substitute.For<ITgsRepository>();
+
+        var sut = new PlayerRegisterDetailQueryService(fakeTgsRepository);
+
+        var query = new PlayerRegisterDetailQuery(Guid.NewGuid(), DateOnly.Parse("2022-8-15"));
+
+        await sut.QueryAsync(query).ToArrayAsync();
+
+        _ = fakeTgsRepository.Received(1)
+            .QueryPlayerDailyRegisterStatisticsAsync(Arg.Is(query.BrandId), Arg.Is(query.ReportDate));
     }
 }
