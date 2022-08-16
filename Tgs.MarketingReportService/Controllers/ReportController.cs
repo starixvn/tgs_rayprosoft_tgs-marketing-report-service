@@ -10,6 +10,26 @@ namespace Tgs.MarketingReportService.Controllers;
 [ApiController]
 public class ReportController : ControllerBase
 {
+    [HttpGet("marketing/register/{brandId}/{reportDate}")]
+    public IAsyncEnumerable<PlayerRegisterDetailViewModel> GetPlayerDailyRegisterDetailAsync(
+        [FromServices] IQueryService<PlayerRegisterDetailQuery, PlayerRegisterItem> queryService,
+        Guid brandId,
+        DateOnly reportDate)
+    {
+        var query = new PlayerRegisterDetailQuery(brandId, reportDate);
+
+        return queryService.QueryAsync(query, HttpContext.RequestAborted)
+            .Select(item => new PlayerRegisterDetailViewModel
+            {
+                PlayerCode = item.PlayerCode,
+                PlayerName = item.PlayerName,
+                AgentId = item.AgentId,
+                RegisteredOn = item.RegisteredOn,
+                LastLoginOn = item.LastLoginOn,
+                LoginCount = item.LoginCount
+            });
+    }
+
     [HttpGet("marketing/{brandId}/{queryDate}", Name = "QueryMarketingStatisticsData")]
     public IAsyncEnumerable<MarketingReportDailyAggregateViewModel> QueryMarketingStatisticsDataAsync(
         [FromServices] IQueryService<AgentMarketingQuery, AgentMarketingStatistics> queryService,

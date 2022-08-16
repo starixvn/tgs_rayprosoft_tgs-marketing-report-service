@@ -11,4 +11,9 @@ public interface ITgsRepository
         Guid brandId,
         DateOnly queryLatestDate,
         CancellationToken cancellationToken = default);
+
+    IAsyncEnumerable<PlayerRegisterItem> QueryPlayerDailyRegisterStatisticsAsync(
+        Guid brandId,
+        DateOnly queryDate,
+        CancellationToken cancellationToken = default);
 }

@@ -1,5 +1,5 @@
-﻿using Tgs.MarketingReport.Repositories.Entities;
-using Tgs.MarketingReport;
+﻿using Microsoft.EntityFrameworkCore;
+using Tgs.MarketingReport.Repositories.Entities;
 
 namespace Tgs.MarketingReport.Repositories;
 
@@ -50,5 +50,31 @@ internal class TgsRepository : ITgsRepository
         return query
             .ToArray()
             .ToAsyncEnumerable();
+    }
+
+    public IAsyncEnumerable<PlayerRegisterItem> QueryPlayerDailyRegisterStatisticsAsync(
+        Guid brandId,
+        DateOnly queryDate,
+        CancellationToken cancellationToken = default)
+    {
+        var query = _context.Set<PlayerRegisterItem>()
+            .FromSqlInterpolated(@$"
+                SELECT
+                    S.player_code,
+                    P.username AS player_name,
+                    P.agent_id,
+                    P.registered_on,
+                    S.last_login_on,
+                    S.daily_login_count AS login_count
+                FROM
+                    dbo.players AS P
+                    JOIN
+                    dbo.player_daily_register_statistics AS S ON P.player_code = S.player_code
+                WHERE
+                    P.brand_id = {brandId}
+                    AND
+                    S.report_date = {queryDate}");
+
+        return query.ToAsyncEnumerable();
     }
 }
