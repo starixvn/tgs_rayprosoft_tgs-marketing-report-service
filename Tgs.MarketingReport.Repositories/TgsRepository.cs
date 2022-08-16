@@ -60,12 +60,12 @@ internal class TgsRepository : ITgsRepository
         var query = _context.Set<PlayerRegisterItem>()
             .FromSqlInterpolated(@$"
                 SELECT
-                    S.player_code,
-                    P.username AS player_name,
-                    P.agent_id,
-                    P.registered_on,
-                    S.last_login_on,
-                    S.daily_login_count AS login_count
+                    S.player_code AS PlayerCode,
+                    P.username AS PlayerName,
+                    P.agent_id AS AgentId,
+                    P.registered_on AS RegisteredOn,
+                    S.last_login_on AS LastLoginOn,
+                    S.daily_login_count AS LoginCount
                 FROM
                     dbo.players AS P
                     JOIN
