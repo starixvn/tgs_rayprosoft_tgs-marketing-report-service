@@ -73,7 +73,9 @@ internal class TgsRepository : ITgsRepository
                 WHERE
                     P.brand_id = {brandId}
                     AND
-                    S.report_date = {queryDate}");
+                    S.report_date = {queryDate}
+                    AND
+                    P.agent_id IS NOT NULL");
 
         return query.ToAsyncEnumerable();
     }
