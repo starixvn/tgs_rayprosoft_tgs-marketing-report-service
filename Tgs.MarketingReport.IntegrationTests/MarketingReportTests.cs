@@ -1,7 +1,5 @@
-﻿using EntityFrameworkCore.Testing.NSubstitute;
-using EntityFrameworkCore.Testing.NSubstitute.Extensions;
+﻿using EntityFrameworkCore.Testing.NSubstitute.Extensions;
 using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
 using Tgs.MarketingReport.Client;
 using Tgs.MarketingReport.Repositories.Entities;
 
@@ -279,6 +277,39 @@ internal class MarketingReportTests
             .ToArrayAsync();
 
         CollectionAssert.AreEquivalent(expected, actual);
+    }
+
+    [Test]
+    public async Task Query_Player_Gaming_Detail_By_Report_Date()
+    {
+        await using var web = new TestMarketingReportServiceApplication();
+
+        var httpClient = web.CreateClient();
+
+        var sut = new MarketingReportClient(httpClient);
+
+        var brandId = Guid.NewGuid();
+        var reportDate = DateOnly.Parse("2022-6-24");
+
+        var dbContext = web.Services.GetRequiredService<TgsContext>();
+
+        dbContext.Set<PlayerGamingItem>().AddFromSqlInterpolatedResult(
+            new[] {
+                new PlayerGamingItem(
+                    "test1",
+                    "Test1",
+                    Guid.NewGuid(),
+                    "GP1",
+                    "GP1",
+                    100)
+            });
+
+        var actual = await sut
+            .QueryPlayerGamingDetailAsync(brandId, reportDate)
+            .ToArrayAsync();
+
+        Assert.AreEqual(1, actual.Length);
+        Assert.AreEqual("test1", actual[0].PlayerCode);
     }
 
     [Test]

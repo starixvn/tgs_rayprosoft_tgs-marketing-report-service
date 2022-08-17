@@ -1,4 +1,5 @@
 ﻿namespace Tgs.MarketingReport.Client;
+
 public record PlayerRegisterDetail(
     string PlayerCode,
     string PlayerName,

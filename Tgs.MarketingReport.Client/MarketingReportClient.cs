@@ -91,8 +91,29 @@ internal class MarketingReportClient : IMarketingReportClient
             yield return info;
     }
 
-    public async IAsyncEnumerable<PlayerRegisterDetail> QueryPlayerRegisterDetailAsync(
+    public async IAsyncEnumerable<PlayerGamingDetail> QueryPlayerGamingDetailAsync(
         Guid brandId,
+        DateOnly reportDate,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        var response = await _httpClient
+            .GetAsync($"/report/marketing/gaming/{brandId}/{reportDate:yyyy-MM-dd}", cancellationToken)
+            .ConfigureAwait(false);
+
+        _ = response.EnsureSuccessStatusCode();
+
+        var contentJson = await response.Content
+            .ReadAsStringAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        var details = JsonSerializer.Deserialize<PlayerGamingDetail[]>(contentJson, _SerializerOptions);
+
+        foreach (var info in details!)
+            yield return info;
+    }
+
+    public async IAsyncEnumerable<PlayerRegisterDetail> QueryPlayerRegisterDetailAsync(
+            Guid brandId,
         DateOnly reportDate,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
