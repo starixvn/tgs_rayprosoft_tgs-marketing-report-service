@@ -79,4 +79,32 @@ internal class TgsRepository : ITgsRepository
 
         return query.ToAsyncEnumerable();
     }
+
+    public IAsyncEnumerable<PlayerGamingItem> QueryPlayerGamingStatisticsAsync(
+        Guid brandId,
+        DateOnly queryDate,
+        CancellationToken cancellationToken = default)
+    {
+        var query = _context.Set<PlayerGamingItem>()
+            .FromSqlInterpolated(@$"
+                SELECT
+                    S.player_code AS PlayerCode,
+                    P.username AS PlayerName,
+                    P.agent_id AS AgentId,
+                    S.gp_code AS GpCode,
+                    S.sub_gp_code AS SubGpCode,
+                    S.win_loss AS WinLossAmount
+                FROM
+                    dbo.players AS P
+                    JOIN
+                    dbo.player_daily_gaming_statistics AS S ON P.player_code = S.player_code
+                WHERE
+                    P.brand_id = {brandId}
+                    AND
+                    S.report_date = {queryDate}
+                    AND
+                    P.agent_id IS NOT NULL");
+
+        return query.ToAsyncEnumerable();
+    }
 }

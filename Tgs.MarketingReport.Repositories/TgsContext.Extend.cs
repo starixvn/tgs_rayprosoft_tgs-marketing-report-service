@@ -11,5 +11,8 @@ public partial class TgsContext
     {
         modelBuilder.Entity<PlayerRegisterItem>()
             .HasNoKey();
+
+        modelBuilder.Entity<PlayerGamingItem>()
+            .HasNoKey();
     }
 }
