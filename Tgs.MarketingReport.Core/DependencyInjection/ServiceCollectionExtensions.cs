@@ -14,5 +14,6 @@ public static class ServiceCollectionExtensions
             .AddOptions<ScheduleOptions>()
             .Configure(configure)
             .Services
-            .RegisterAllServiceUtilityTypes(Assembly.GetExecutingAssembly(), ServiceLifetime.Transient);
+            .RegisterAllServiceUtilityTypes(Assembly.GetExecutingAssembly(), ServiceLifetime.Transient)
+            .AddSingleton<ISystemClock, DefaultSystemClock>();
 }
