@@ -115,7 +115,7 @@ internal class TgsRepository : ITgsRepository
     {
         var reportDateTime = new DateTimeOffset(
             queryDate.ToDateTime(TimeOnly.MinValue, DateTimeKind.Unspecified),
-            TimeSpan.FromHours(8D));
+            TimeSpan.FromHours(8D)).ToOffset(TimeSpan.Zero);
 
         var query = _context.Set<PlayerGamingItem>()
             .FromSqlInterpolated($@"
