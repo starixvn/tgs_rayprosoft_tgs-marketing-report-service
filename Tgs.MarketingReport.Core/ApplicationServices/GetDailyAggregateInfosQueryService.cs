@@ -1,9 +1,10 @@
 ﻿using Tgs.ServiceUtility;
+using Tgs.MarketingReport.ApplicationServices;
 
-namespace Tgs.MarketingReport.Core.ApplicationServices;
+namespace Tgs.MarketingReport.ApplicationServices;
 
 internal class GetDailyAggregateInfosQueryService
-    : IQueryService<GetDailyAggregateInfosQuery, DailyAggregateInfo>
+    : IQueryService<GetDailyAggregateInfosQuery, AgentMarketingStatistics>
 {
     private readonly ITgsRepository _tgsRepository;
 
@@ -13,7 +14,7 @@ internal class GetDailyAggregateInfosQueryService
         _tgsRepository = tgsRepository ?? throw new ArgumentNullException(nameof(tgsRepository));
     }
 
-    public IAsyncEnumerable<DailyAggregateInfo> QueryAsync(
+    public IAsyncEnumerable<AgentMarketingStatistics> QueryAsync(
         GetDailyAggregateInfosQuery query,
         CancellationToken cancellationToken = default)
         => _tgsRepository.GetDailyAggregateInfosAsync(query.BrandId, query.StartDate, query.EndDate);

@@ -1,20 +1,21 @@
 ﻿using System.Runtime.CompilerServices;
 using Tgs.ServiceUtility;
+using Tgs.MarketingReport.ApplicationServices;
 
-namespace Tgs.MarketingReport.Core.ApplicationServices;
+namespace Tgs.MarketingReport.ApplicationServices;
 
 internal class GetDailyAggregateInfosByAgentQueryService
-    : IQueryService<GetDailyAggregateInfosByAgentQuery, DailyAggregateInfo>
+    : IQueryService<GetDailyAggregateInfosByAgentQuery, AgentMarketingStatistics>
 {
-    private readonly IQueryService<GetDailyAggregateInfosQuery, DailyAggregateInfo> _queryService;
+    private readonly IQueryService<GetDailyAggregateInfosQuery, AgentMarketingStatistics> _queryService;
 
     public GetDailyAggregateInfosByAgentQueryService(
-        IQueryService<GetDailyAggregateInfosQuery, DailyAggregateInfo> queryService)
+        IQueryService<GetDailyAggregateInfosQuery, AgentMarketingStatistics> queryService)
     {
         _queryService = queryService ?? throw new ArgumentNullException(nameof(queryService));
     }
 
-    public async IAsyncEnumerable<DailyAggregateInfo> QueryAsync(GetDailyAggregateInfosByAgentQuery query,
+    public async IAsyncEnumerable<AgentMarketingStatistics> QueryAsync(GetDailyAggregateInfosByAgentQuery query,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var dataQuery = new GetDailyAggregateInfosQuery(

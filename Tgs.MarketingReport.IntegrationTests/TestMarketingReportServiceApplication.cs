@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using EntityFrameworkCore.Testing.NSubstitute;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -46,7 +42,7 @@ internal class TestMarketingReportServiceApplication : WebApplicationFactory<Mar
                         .ConfigureWarnings(x => x.Ignore(
                             InMemoryEventId.TransactionIgnoredWarning));
 
-                    return new TgsContext(dbContextOptionsBuilder.Options);
+                    return Create.MockedDbContextFor<TgsContext>(dbContextOptionsBuilder.Options);
                 })));
 
         _webHostConfigure?.Invoke(builder);

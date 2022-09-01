@@ -1,9 +1,9 @@
 ﻿// ReSharper disable CheckNamespace
 
 using Microsoft.EntityFrameworkCore;
-using Tgs.MarketingReport.Core;
 using Tgs.MarketingReport.Repositories;
 using Tgs.MarketingReport.Repositories.Entities;
+using Tgs.MarketingReport;
 
 namespace Microsoft.Extensions.DependencyInjection;
 

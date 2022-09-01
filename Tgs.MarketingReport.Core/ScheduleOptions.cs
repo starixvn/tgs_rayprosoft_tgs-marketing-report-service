@@ -1,4 +1,4 @@
-﻿namespace Tgs.MarketingReport.Core;
+﻿namespace Tgs.MarketingReport;
 
 public class ScheduleOptions
 {

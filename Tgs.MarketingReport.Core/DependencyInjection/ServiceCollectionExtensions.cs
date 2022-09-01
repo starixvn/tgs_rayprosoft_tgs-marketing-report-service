@@ -1,7 +1,7 @@
 ﻿// ReSharper disable CheckNamespace
 
 using System.Reflection;
-using Tgs.MarketingReport.Core;
+using Tgs.MarketingReport;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -14,5 +14,6 @@ public static class ServiceCollectionExtensions
             .AddOptions<ScheduleOptions>()
             .Configure(configure)
             .Services
-            .RegisterAllServiceUtilityTypes(Assembly.GetExecutingAssembly(), ServiceLifetime.Transient);
+            .RegisterAllServiceUtilityTypes(Assembly.GetExecutingAssembly(), ServiceLifetime.Transient)
+            .AddSingleton<ISystemClock, DefaultSystemClock>();
 }

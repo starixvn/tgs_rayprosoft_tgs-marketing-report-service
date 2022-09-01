@@ -1,23 +1,24 @@
 ﻿using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
-using Tgs.MarketingReport.Core.ApplicationServices;
 using Tgs.ServiceUtility;
+using Tgs.MarketingReport.ApplicationServices;
+using Tgs.MarketingReport;
 
 namespace Tgs.MarketingReport.Core.Cache;
 
-internal class GetMemoryCachedDailyAggregateInfosQueryService : IQueryService<GetDailyAggregateInfosQuery, DailyAggregateInfo>
+internal class GetMemoryCachedDailyAggregateInfosQueryService : IQueryService<GetDailyAggregateInfosQuery, AgentMarketingStatistics>
 {
     private static readonly TimeSpan _Offset = TimeSpan.FromHours(8D);
 
     private readonly IMemoryCache _memoryCache;
     private readonly ScheduleOptions _scheduleOptions;
-    private readonly IQueryService<GetDailyAggregateInfosQuery, DailyAggregateInfo> _sourceService;
+    private readonly IQueryService<GetDailyAggregateInfosQuery, AgentMarketingStatistics> _sourceService;
     private readonly ISystemClock _systemClock;
 
     public GetMemoryCachedDailyAggregateInfosQueryService(
         IOptions<ScheduleOptions> options,
-        IQueryService<GetDailyAggregateInfosQuery, DailyAggregateInfo> sourceService,
+        IQueryService<GetDailyAggregateInfosQuery, AgentMarketingStatistics> sourceService,
         IMemoryCache memoryCache,
         ISystemClock systemClock)
     {
@@ -27,7 +28,7 @@ internal class GetMemoryCachedDailyAggregateInfosQueryService : IQueryService<Ge
         _systemClock = systemClock ?? throw new ArgumentNullException(nameof(systemClock));
     }
 
-    public async IAsyncEnumerable<DailyAggregateInfo> QueryAsync(GetDailyAggregateInfosQuery query,
+    public async IAsyncEnumerable<AgentMarketingStatistics> QueryAsync(GetDailyAggregateInfosQuery query,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var now = _systemClock.UtcNow.ToOffset(_Offset);

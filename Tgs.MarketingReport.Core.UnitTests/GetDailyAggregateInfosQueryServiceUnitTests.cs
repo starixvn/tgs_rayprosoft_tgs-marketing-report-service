@@ -1,5 +1,6 @@
 ﻿using NSubstitute;
-using Tgs.MarketingReport.Core.ApplicationServices;
+using Tgs.MarketingReport.ApplicationServices;
+using Tgs.MarketingReport;
 
 namespace Tgs.MarketingReport.Core.UnitTests;
 

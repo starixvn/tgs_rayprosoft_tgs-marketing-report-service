@@ -69,4 +69,67 @@ internal class MarketingReportClient : IMarketingReportClient
         foreach (var info in aggregateInfos!)
             yield return info;
     }
+
+    public async IAsyncEnumerable<DailyAggregateInfo> QueryMarketingStatisticsAsync(
+        Guid brandId,
+        DateOnly queryDate,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        var response = await _httpClient
+            .GetAsync($"/report/marketing/{brandId}/{queryDate:yyyy-MM-dd}", cancellationToken)
+            .ConfigureAwait(false);
+
+        _ = response.EnsureSuccessStatusCode();
+
+        var contentJson = await response.Content
+            .ReadAsStringAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        var aggregateInfos = JsonSerializer.Deserialize<DailyAggregateInfo[]>(contentJson, _SerializerOptions);
+
+        foreach (var info in aggregateInfos!)
+            yield return info;
+    }
+
+    public async IAsyncEnumerable<PlayerGamingDetail> QueryPlayerGamingDetailAsync(
+        Guid brandId,
+        DateOnly reportDate,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        var response = await _httpClient
+            .GetAsync($"/report/marketing/gaming/{brandId}/{reportDate:yyyy-MM-dd}", cancellationToken)
+            .ConfigureAwait(false);
+
+        _ = response.EnsureSuccessStatusCode();
+
+        var contentJson = await response.Content
+            .ReadAsStringAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        var details = JsonSerializer.Deserialize<PlayerGamingDetail[]>(contentJson, _SerializerOptions);
+
+        foreach (var info in details!)
+            yield return info;
+    }
+
+    public async IAsyncEnumerable<PlayerRegisterDetail> QueryPlayerRegisterDetailAsync(
+            Guid brandId,
+        DateOnly reportDate,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        var response = await _httpClient
+            .GetAsync($"/report/marketing/register/{brandId}/{reportDate:yyyy-MM-dd}", cancellationToken)
+            .ConfigureAwait(false);
+
+        _ = response.EnsureSuccessStatusCode();
+
+        var contentJson = await response.Content
+            .ReadAsStringAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        var details = JsonSerializer.Deserialize<PlayerRegisterDetail[]>(contentJson, _SerializerOptions);
+
+        foreach (var info in details!)
+            yield return info;
+    }
 }
