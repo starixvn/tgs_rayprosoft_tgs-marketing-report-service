@@ -1,8 +1,9 @@
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using NSubstitute;
-using Tgs.MarketingReport.Core.ApplicationServices;
 using Tgs.ServiceUtility;
+using Tgs.MarketingReport.ApplicationServices;
+using Tgs.MarketingReport;
 
 namespace Tgs.MarketingReport.Core.Cache.UnitTests;
 
@@ -18,7 +19,7 @@ public class GetMemoryCachedDailyAggregateInfosQueryServiceUnitTests
 
         var fakeMemoryCache = new MemoryCache(new OptionsWrapper<MemoryCacheOptions>(new MemoryCacheOptions()));
 
-        var fakeQueryService = Substitute.For<IQueryService<GetDailyAggregateInfosQuery, DailyAggregateInfo>>();
+        var fakeQueryService = Substitute.For<IQueryService<GetDailyAggregateInfosQuery, AgentMarketingStatistics>>();
         var fakeSystemClock = Substitute.For<ISystemClock>();
 
         var brandId = Guid.NewGuid();
@@ -26,10 +27,10 @@ public class GetMemoryCachedDailyAggregateInfosQueryServiceUnitTests
 
         _ = fakeSystemClock.UtcNow.Returns(now);
 
-        var expected = new DailyAggregateInfo[]
+        var expected = new AgentMarketingStatistics[]
         {
-            new(Guid.NewGuid(), DateOnly.Parse("2022-07-01"), 1, 0, 0),
-            new(Guid.NewGuid(), DateOnly.Parse("2022-07-01"), 0, 1, 1),
+            new(Guid.NewGuid(), DateOnly.Parse("2022-07-01"), 1, 0),
+            new(Guid.NewGuid(), DateOnly.Parse("2022-07-01"), 0, 1),
         };
 
         var currentDate = DateOnly.Parse("2022-07-01");
@@ -68,7 +69,7 @@ public class GetMemoryCachedDailyAggregateInfosQueryServiceUnitTests
 
         var fakeMemoryCache = new MemoryCache(new OptionsWrapper<MemoryCacheOptions>(new MemoryCacheOptions()));
 
-        var fakeQueryService = Substitute.For<IQueryService<GetDailyAggregateInfosQuery, DailyAggregateInfo>>();
+        var fakeQueryService = Substitute.For<IQueryService<GetDailyAggregateInfosQuery, AgentMarketingStatistics>>();
         var fakeSystemClock = Substitute.For<ISystemClock>();
 
         var brandId = Guid.NewGuid();
@@ -76,10 +77,10 @@ public class GetMemoryCachedDailyAggregateInfosQueryServiceUnitTests
 
         _ = fakeSystemClock.UtcNow.Returns(now);
 
-        var expected = new DailyAggregateInfo[]
+        var expected = new AgentMarketingStatistics[]
         {
-            new(Guid.NewGuid(), DateOnly.Parse("2022-07-01"), 1, 0, 0),
-            new(Guid.NewGuid(), DateOnly.Parse("2022-07-01"), 0, 1, 1),
+            new(Guid.NewGuid(), DateOnly.Parse("2022-07-01"), 1, 0),
+            new(Guid.NewGuid(), DateOnly.Parse("2022-07-01"), 0, 1),
         };
 
         var currentDate = DateOnly.Parse("2022-07-01");
@@ -124,7 +125,7 @@ public class GetMemoryCachedDailyAggregateInfosQueryServiceUnitTests
         });
 
         var fakeMemoryCache = Substitute.For<IMemoryCache>();
-        var fakeQueryService = Substitute.For<IQueryService<GetDailyAggregateInfosQuery, DailyAggregateInfo>>();
+        var fakeQueryService = Substitute.For<IQueryService<GetDailyAggregateInfosQuery, AgentMarketingStatistics>>();
         var fakeSystemClock = Substitute.For<ISystemClock>();
 
         var brandId = Guid.NewGuid();
@@ -151,7 +152,7 @@ public class GetMemoryCachedDailyAggregateInfosQueryServiceUnitTests
             .Received(1)
             .GetOrCreateAsync(
                 Arg.Is($"DailyAggregate: Brand:{brandId}:{cachedDate}"),
-                Arg.Any<Func<ICacheEntry, Task<DailyAggregateInfo[]>>>());
+                Arg.Any<Func<ICacheEntry, Task<AgentMarketingStatistics[]>>>());
     }
 
     [Test]
@@ -163,7 +164,7 @@ public class GetMemoryCachedDailyAggregateInfosQueryServiceUnitTests
         });
 
         var fakeMemoryCache = Substitute.For<IMemoryCache>();
-        var fakeQueryService = Substitute.For<IQueryService<GetDailyAggregateInfosQuery, DailyAggregateInfo>>();
+        var fakeQueryService = Substitute.For<IQueryService<GetDailyAggregateInfosQuery, AgentMarketingStatistics>>();
         var fakeSystemClock = Substitute.For<ISystemClock>();
 
         var brandId = Guid.NewGuid();
@@ -190,6 +191,6 @@ public class GetMemoryCachedDailyAggregateInfosQueryServiceUnitTests
             .Received(1)
             .GetOrCreateAsync(
                 Arg.Is($"DailyAggregate: Brand:{brandId}:{cachedDate}"),
-                Arg.Any<Func<ICacheEntry, Task<DailyAggregateInfo[]>>>());
+                Arg.Any<Func<ICacheEntry, Task<AgentMarketingStatistics[]>>>());
     }
 }

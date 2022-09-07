@@ -1,6 +1,7 @@
 ﻿using NSubstitute;
-using Tgs.MarketingReport.Core.ApplicationServices;
 using Tgs.ServiceUtility;
+using Tgs.MarketingReport.ApplicationServices;
+using Tgs.MarketingReport;
 
 namespace Tgs.MarketingReport.Core.UnitTests;
 
@@ -9,7 +10,7 @@ internal class GetDailyAggregateInfosByAgentQueryServiceUnitTests
     [Test]
     public async Task Can_Get_DailyAggregate_Infos_By_AgentId()
     {
-        var fakeQueryService = Substitute.For<IQueryService<GetDailyAggregateInfosQuery, DailyAggregateInfo>>();
+        var fakeQueryService = Substitute.For<IQueryService<GetDailyAggregateInfosQuery, AgentMarketingStatistics>>();
 
         var brandId = Guid.NewGuid();
         var agentId = Guid.NewGuid();

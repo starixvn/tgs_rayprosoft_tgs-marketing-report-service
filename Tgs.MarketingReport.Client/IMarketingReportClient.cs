@@ -14,4 +14,10 @@ public interface IMarketingReportClient
         DateOnly startDate,
         DateOnly endDate,
         CancellationToken cancellationToken = default);
+
+    public IAsyncEnumerable<DailyAggregateInfo> QueryMarketingStatisticsAsync(Guid brandId, DateOnly queryDate, CancellationToken cancellationToken = default);
+
+    public IAsyncEnumerable<PlayerGamingDetail> QueryPlayerGamingDetailAsync(Guid brandId, DateOnly reportDate, CancellationToken cancellationToken = default);
+
+    public IAsyncEnumerable<PlayerRegisterDetail> QueryPlayerRegisterDetailAsync(Guid brandId, DateOnly reportDate, CancellationToken cancellationToken = default);
 }

@@ -1,4 +1,4 @@
-﻿namespace Tgs.MarketingReport.Core.ApplicationServices;
+﻿namespace Tgs.MarketingReport.ApplicationServices;
 
 public record GetDailyAggregateInfosByAgentQuery(
     Guid BrandId,

@@ -1,9 +1,7 @@
-﻿// ReSharper disable CheckNamespace
-
-using Tgs.MarketingReport.Core;
-using Tgs.MarketingReport.Core.ApplicationServices;
-using Tgs.MarketingReport.Core.Cache;
+﻿using Tgs.MarketingReport.Core.Cache;
 using Tgs.ServiceUtility;
+using Tgs.MarketingReport.ApplicationServices;
+using Tgs.MarketingReport;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +11,6 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services)
         => services
             .AddSingleton<ISystemClock, DefaultSystemClock>()
-            .Decorate<IQueryService<GetDailyAggregateInfosQuery, DailyAggregateInfo>,
+            .Decorate<IQueryService<GetDailyAggregateInfosQuery, AgentMarketingStatistics>,
                 GetMemoryCachedDailyAggregateInfosQueryService>();
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using EntityFrameworkCore.Testing.NSubstitute.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using Tgs.MarketingReport.Client;
 using Tgs.MarketingReport.Repositories.Entities;
 
@@ -28,7 +29,6 @@ internal class MarketingReportTests
             new DailyAggregateInfo
             {
                 AgentId = agentId,
-                FirstDepositCount = 0,
                 GamingCount = 0,
                 RegisterCount = 2,
                 ReportDate = DateOnly.Parse("2022-06-22")
@@ -36,7 +36,6 @@ internal class MarketingReportTests
             new DailyAggregateInfo
             {
                 AgentId = agentId,
-                FirstDepositCount = 0,
                 GamingCount = 10,
                 RegisterCount = 3,
                 ReportDate = DateOnly.Parse("2022-06-23")
@@ -145,7 +144,6 @@ internal class MarketingReportTests
             new DailyAggregateInfo
             {
                 AgentId = agentId,
-                FirstDepositCount = 0,
                 GamingCount = 0,
                 RegisterCount = 2,
                 ReportDate = DateOnly.Parse("2022-06-22")
@@ -153,7 +151,6 @@ internal class MarketingReportTests
             new DailyAggregateInfo
             {
                 AgentId = agentId,
-                FirstDepositCount = 0,
                 GamingCount = 10,
                 RegisterCount = 3,
                 ReportDate = DateOnly.Parse("2022-06-23")
@@ -219,5 +216,132 @@ internal class MarketingReportTests
             .ToArrayAsync();
 
         CollectionAssert.AreEqual(expected, actual);
+    }
+
+    [Test]
+    public async Task Query_Marketing_Report_By_Query_Date()
+    {
+        await using var web = new TestMarketingReportServiceApplication();
+
+        var httpClient = web.CreateClient();
+
+        var sut = new MarketingReportClient(httpClient);
+
+        var dbContext = web.Services.GetRequiredService<TgsContext>();
+
+        var agentId = Guid.NewGuid();
+        var brandId = Guid.NewGuid();
+
+        var expected = new[]
+        {
+            new DailyAggregateInfo
+            {
+                AgentId = agentId,
+                GamingCount = 0,
+                RegisterCount = 2,
+                ReportDate = DateOnly.Parse("2022-06-22")
+            },
+            new DailyAggregateInfo
+            {
+                AgentId = agentId,
+                GamingCount = 10,
+                RegisterCount = 3,
+                ReportDate = DateOnly.Parse("2022-06-23")
+            }
+        };
+
+        await dbContext.AgentDailyMarketingStatistics.AddRangeAsync(
+            new AgentDailyMarketingStatistic
+            {
+                AgentId = agentId,
+                BrandId = brandId,
+                GamingCount = 0,
+                RegisterCount = 2,
+                ReportDate = DateOnly.Parse("2022-06-22")
+            },
+            new AgentDailyMarketingStatistic
+            {
+                AgentId = agentId,
+                BrandId = brandId,
+                GamingCount = 10,
+                RegisterCount = 3,
+                ReportDate = DateOnly.Parse("2022-06-23")
+            });
+
+        _ = await dbContext.SaveChangesAsync();
+
+        var queryDate = DateOnly.Parse("2022-06-24");
+
+        var actual = await sut
+            .QueryMarketingStatisticsAsync(brandId, queryDate)
+            .ToArrayAsync();
+
+        CollectionAssert.AreEquivalent(expected, actual);
+    }
+
+    [Test]
+    public async Task Query_Player_Gaming_Detail_By_Report_Date()
+    {
+        await using var web = new TestMarketingReportServiceApplication();
+
+        var httpClient = web.CreateClient();
+
+        var sut = new MarketingReportClient(httpClient);
+
+        var brandId = Guid.NewGuid();
+        var reportDate = DateOnly.Parse("2022-6-24");
+
+        var dbContext = web.Services.GetRequiredService<TgsContext>();
+
+        dbContext.Set<PlayerGamingItem>().AddFromSqlInterpolatedResult(
+            new[] {
+                new PlayerGamingItem(
+                    "test1",
+                    "Test1",
+                    Guid.NewGuid(),
+                    "GP1",
+                    "GP1",
+                    100)
+            });
+
+        var actual = await sut
+            .QueryPlayerGamingDetailAsync(brandId, reportDate)
+            .ToArrayAsync();
+
+        Assert.AreEqual(1, actual.Length);
+        Assert.AreEqual("test1", actual[0].PlayerCode);
+    }
+
+    [Test]
+    public async Task Query_Player_Register_Detail_By_Report_Date()
+    {
+        await using var web = new TestMarketingReportServiceApplication();
+
+        var httpClient = web.CreateClient();
+
+        var sut = new MarketingReportClient(httpClient);
+
+        var brandId = Guid.NewGuid();
+        var reportDate = DateOnly.Parse("2022-6-24");
+
+        var dbContext = web.Services.GetRequiredService<TgsContext>();
+
+        dbContext.Set<PlayerRegisterItem>().AddFromSqlInterpolatedResult(
+            new[] {
+                new PlayerRegisterItem(
+                    "test1",
+                    "Test1",
+                    Guid.NewGuid(),
+                    DateTime.Now,
+                    DateTime.Now,
+                    1)
+            });
+
+        var actual = await sut
+            .QueryPlayerRegisterDetailAsync(brandId, reportDate)
+            .ToArrayAsync();
+
+        Assert.AreEqual(1, actual.Length);
+        Assert.AreEqual("test1", actual[0].PlayerCode);
     }
 }
