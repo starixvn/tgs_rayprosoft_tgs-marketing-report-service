@@ -1,6 +1,8 @@
 ﻿using EntityFrameworkCore.Testing.NSubstitute.Extensions;
 using Microsoft.Extensions.DependencyInjection;
+using NSubstitute;
 using Tgs.MarketingReport.Client;
+using Tgs.MarketingReport.Core.Cache;
 using Tgs.MarketingReport.Repositories.Entities;
 
 namespace Tgs.MarketingReport.IntegrationTests;
@@ -10,11 +12,17 @@ internal class MarketingReportTests
     [Test]
     public async Task Get_Marketing_Report_Daily_Aggregate_Infos_By_AgentId()
     {
-        await using var web = new TestMarketingReportServiceApplication();
+        var fakeSystemClock = Substitute.For<ISystemClock>();
+
+        await using var web = new TestMarketingReportServiceApplication(builder => 
+            builder.ConfigureServices(services => 
+                services.AddSingleton(fakeSystemClock)));
 
         var httpClient = web.CreateClient();
 
         var sut = new MarketingReportClient(httpClient);
+
+        _ = fakeSystemClock.UtcNow.Returns(DateTimeOffset.Parse("2022-06-24 10:00:00+08:00"));
 
         var dbContext = web.Services.GetRequiredService<TgsContext>();
 
@@ -127,11 +135,18 @@ internal class MarketingReportTests
     [Test]
     public async Task Get_Marketing_Report_Daily_Aggregate_Infos_By_Brand()
     {
-        await using var web = new TestMarketingReportServiceApplication();
+        var fakeSystemClock = Substitute.For<ISystemClock>();
+
+        await using var web = new TestMarketingReportServiceApplication(builder =>
+            builder.ConfigureServices(services =>
+                services.AddSingleton(fakeSystemClock)));
 
         var httpClient = web.CreateClient();
 
         var sut = new MarketingReportClient(httpClient);
+
+        _ = fakeSystemClock.UtcNow.Returns(DateTimeOffset.Parse("2022-06-24 10:00:00+08:00"));
+
 
         var dbContext = web.Services.GetRequiredService<TgsContext>();
 
