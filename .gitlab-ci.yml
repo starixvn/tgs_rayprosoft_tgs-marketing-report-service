@@ -20,7 +20,7 @@ build-code:
   script:
     - dotnet build -c $BuildConfiguration
   only:
-    - merge-requests
+    - merge_requests
     - main
   cache:
     key: $BuildCacheKey
