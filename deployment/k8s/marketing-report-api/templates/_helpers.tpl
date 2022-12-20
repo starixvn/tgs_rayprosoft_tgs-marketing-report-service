@@ -47,7 +47,7 @@ Selector labels
 */}}
 {{- define "marketing-report-api.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "marketing-report-api.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/instance: RELEASE-NAME
 app: {{ include "marketing-report-api.name" . }}
 tgs.kind: report
 {{- end }}
