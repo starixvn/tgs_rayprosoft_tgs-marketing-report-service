@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageId>Tgs.MarketingReport.Client</PackageId>
-    <Version>0.0.3</Version>
+    <Version>0.0.8</Version>
     <Authors>Raypro</Authors>
     <Product>Tgs.MarketingReport.Client</Product>
     <PackageProjectUrl>https://gitlab.com/rayprosoft/tgs-marketing-report-service</PackageProjectUrl>
