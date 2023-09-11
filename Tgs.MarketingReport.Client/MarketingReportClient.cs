@@ -70,6 +70,23 @@ internal class MarketingReportClient : IMarketingReportClient
             yield return info;
     }
 
+    public async ValueTask<DailyBrandMarketingStatisticInfo?> QueryBrandMarketingStatisticsAsync(Guid brandId, DateOnly queryDate, CancellationToken cancellationToken = default)
+    {
+        var response = await _httpClient
+            .GetAsync($"/report/marketing/brand/{brandId}/{queryDate:yyyy-MM-dd}", cancellationToken)
+            .ConfigureAwait(false);
+
+        _ = response.EnsureSuccessStatusCode();
+
+        var contentJson = await response.Content
+            .ReadAsStringAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        return string.IsNullOrEmpty(contentJson)
+            ? null 
+            : JsonSerializer.Deserialize<DailyBrandMarketingStatisticInfo>(contentJson, _SerializerOptions);
+    }
+
     public async IAsyncEnumerable<DailyAggregateInfo> QueryMarketingStatisticsAsync(
         Guid brandId,
         DateOnly queryDate,

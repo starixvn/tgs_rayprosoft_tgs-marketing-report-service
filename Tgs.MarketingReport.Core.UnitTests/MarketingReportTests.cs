@@ -21,6 +21,21 @@ public class MarketingReportTests
     }
 
     [Test]
+    public async Task Query_Brand_MarketingReport()
+    {
+        var fakeTgsRepository = Substitute.For<ITgsRepository>();
+
+        var sut = new BrandMarketingQueryService(fakeTgsRepository);
+
+        var query = new BrandMarketingQuery(Guid.NewGuid(), DateOnly.Parse("2022-8-15"));
+
+        _ = await sut.GetAsync(query);
+
+        _ = fakeTgsRepository.Received(1)
+            .QueryBrandMarketingStatisticAsync(Arg.Is(query.BrandId), Arg.Is(query.QueryDate));
+    }
+
+    [Test]
     public async Task Query_Player_Gaming_Detail()
     {
         var fakeTgsRepository = Substitute.For<ITgsRepository>();
