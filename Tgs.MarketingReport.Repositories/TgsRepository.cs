@@ -52,6 +52,22 @@ internal class TgsRepository : ITgsRepository
             .ToAsyncEnumerable();
     }
 
+    public async ValueTask<BrandMarketingStatistics?> QueryBrandMarketingStatisticAsync(Guid brandId, DateOnly queryDate, CancellationToken cancellationToken = default)
+    {    
+        var query = _context.BrandDailyMarketingStatistics.AsQueryable()
+            .Where(row => row.BrandId == brandId
+                && row.ReportDate == queryDate)
+            .Select(row => new BrandMarketingStatistics(
+                row.BrandId,
+                row.ReportDate,
+                row.DirectlyPlayerGamingCount ?? 0,
+                row.DirectlyPlayerRegisterCount ?? 0,
+                row.TotalPlayerRegisterCount ?? 0,
+                row.TotalPlayerGamingCount ?? 0));
+
+        return await query.FirstOrDefaultAsync(cancellationToken: cancellationToken);
+    }
+
     public IAsyncEnumerable<PlayerRegisterItem> QueryPlayerDailyRegisterStatisticsAsync(
         Guid brandId,
         DateOnly queryDate,

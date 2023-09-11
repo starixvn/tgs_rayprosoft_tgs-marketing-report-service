@@ -21,6 +21,7 @@ namespace Tgs.MarketingReport.Repositories.Entities
 
         public virtual DbSet<Agent> Agents { get; set; } = null!;
         public virtual DbSet<AgentDailyMarketingStatistic> AgentDailyMarketingStatistics { get; set; } = null!;
+        public virtual DbSet<BrandDailyMarketingStatistic> BrandDailyMarketingStatistics { get; set; } = null!;
         public virtual DbSet<MarketingReportDailyAggregate> MarketingReportDailyAggregates { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -30,6 +31,7 @@ namespace Tgs.MarketingReport.Repositories.Entities
 
             modelBuilder.ApplyConfiguration(new Configurations.AgentConfiguration());
             modelBuilder.ApplyConfiguration(new Configurations.AgentDailyMarketingStatisticConfiguration());
+            modelBuilder.ApplyConfiguration(new Configurations.BrandDailyMarketingStatisticConfiguration());
             modelBuilder.ApplyConfiguration(new Configurations.MarketingReportDailyAggregateConfiguration());
             OnModelCreatingPartial(modelBuilder);
         }

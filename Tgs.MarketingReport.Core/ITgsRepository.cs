@@ -12,6 +12,11 @@ public interface ITgsRepository
         DateOnly queryLatestDate,
         CancellationToken cancellationToken = default);
 
+    ValueTask<BrandMarketingStatistics?> QueryBrandMarketingStatisticAsync(
+        Guid brandId,
+        DateOnly queryDate,
+        CancellationToken cancellationToken = default);
+
     IAsyncEnumerable<PlayerRegisterItem> QueryPlayerDailyRegisterStatisticsAsync(
         Guid brandId,
         DateOnly queryDate,

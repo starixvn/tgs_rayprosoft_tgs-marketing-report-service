@@ -15,6 +15,8 @@ public interface IMarketingReportClient
         DateOnly endDate,
         CancellationToken cancellationToken = default);
 
+    public ValueTask<DailyBrandMarketingStatisticInfo?> QueryBrandMarketingStatisticsAsync(Guid brandId, DateOnly queryDate, CancellationToken cancellationToken = default);
+
     public IAsyncEnumerable<DailyAggregateInfo> QueryMarketingStatisticsAsync(Guid brandId, DateOnly queryDate, CancellationToken cancellationToken = default);
 
     public IAsyncEnumerable<PlayerGamingDetail> QueryPlayerGamingDetailAsync(Guid brandId, DateOnly reportDate, CancellationToken cancellationToken = default);

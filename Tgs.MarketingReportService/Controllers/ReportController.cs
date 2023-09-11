@@ -50,6 +50,32 @@ public class ReportController : ControllerBase
             });
     }
 
+    [HttpGet("marketing/brand/{brandId}/{queryDate}", Name = "QueryBrandMarketingStatisticsData")]
+    public async ValueTask<BrandMarketingStatisticViewModel?> QueryBrandMarketingStatisticsDataAsync(
+        [FromServices] IGetService<BrandMarketingQuery, BrandMarketingStatistics?> queryService,
+        Guid brandId,
+        DateOnly queryDate)
+    {
+        var query = new BrandMarketingQuery(brandId, queryDate);
+
+        var result = await queryService
+            .GetAsync(query, HttpContext.RequestAborted)
+            .ConfigureAwait(false);
+
+        return result is null
+            ? null
+            : new BrandMarketingStatisticViewModel
+            {
+                BrandId = result.BrandId,
+                ReportDate = result.ReportDate,
+                DirectlyRegisterCount = result.DirectlyRegisterCount,
+                DirectlyGamingCount = result.DirectlyGamingCount,
+                TotalGamingCount = result.TotalGamingCount,
+                TotalRegisterCount = result.TotalRegisterCount,
+            };
+        ;
+    }
+
     [HttpGet("marketing/{brandId}/{queryDate}", Name = "QueryMarketingStatisticsData")]
     public IAsyncEnumerable<MarketingReportDailyAggregateViewModel> QueryMarketingStatisticsDataAsync(
         [FromServices] IQueryService<AgentMarketingQuery, AgentMarketingStatistics> queryService,

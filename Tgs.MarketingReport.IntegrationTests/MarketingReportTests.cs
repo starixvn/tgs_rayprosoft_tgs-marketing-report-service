@@ -14,8 +14,8 @@ internal class MarketingReportTests
     {
         var fakeSystemClock = Substitute.For<ISystemClock>();
 
-        await using var web = new TestMarketingReportServiceApplication(builder => 
-            builder.ConfigureServices(services => 
+        await using var web = new TestMarketingReportServiceApplication(builder =>
+            builder.ConfigureServices(services =>
                 services.AddSingleton(fakeSystemClock)));
 
         var httpClient = web.CreateClient();
@@ -147,7 +147,6 @@ internal class MarketingReportTests
 
         _ = fakeSystemClock.UtcNow.Returns(DateTimeOffset.Parse("2022-06-24 10:00:00+08:00"));
 
-
         var dbContext = web.Services.GetRequiredService<TgsContext>();
 
         var agentId = Guid.NewGuid();
@@ -232,6 +231,63 @@ internal class MarketingReportTests
 
         CollectionAssert.AreEqual(expected, actual);
     }
+
+    [Test]
+    public async Task Query_Brand_Marketing_Statistic_By_Report_Date()
+    {
+        await using var web = new TestMarketingReportServiceApplication();
+
+        var httpClient = web.CreateClient();
+
+        var sut = new MarketingReportClient(httpClient);
+
+        var brandId = Guid.NewGuid();
+        var reportDate = DateOnly.Parse("2022-6-24");
+
+        var dbContext = web.Services.GetRequiredService<TgsContext>();
+
+        _ = await dbContext.BrandDailyMarketingStatistics.AddAsync(new BrandDailyMarketingStatistic
+        {
+            BrandId = brandId,
+            ReportDate = reportDate,
+            DirectlyPlayerGamingCount = 1,
+            DirectlyPlayerRegisterCount = 2,
+            TotalPlayerGamingCount = 3,
+            TotalPlayerRegisterCount = 4,
+        });
+
+        _ = await dbContext.SaveChangesAsync();
+
+        var actual = await sut
+            .QueryBrandMarketingStatisticsAsync(brandId, reportDate);
+
+        Assert.NotNull(actual);
+        Assert.AreEqual(brandId, actual!.BrandId);
+        Assert.AreEqual(1, actual.DirectlyGamingCount);
+        Assert.AreEqual(2, actual.DirectlyRegisterCount);
+        Assert.AreEqual(3, actual.TotalGamingCount);
+        Assert.AreEqual(4, actual.TotalRegisterCount);
+    }
+
+    [Test]
+    public async Task Query_Brand_Marketing_Statistic_By_Report_Date_No_Data()
+    {
+        await using var web = new TestMarketingReportServiceApplication();
+
+        var httpClient = web.CreateClient();
+
+        var sut = new MarketingReportClient(httpClient);
+
+        var brandId = Guid.NewGuid();
+        var reportDate = DateOnly.Parse("2022-6-24");
+
+        var dbContext = web.Services.GetRequiredService<TgsContext>();
+       
+        var actual = await sut.QueryBrandMarketingStatisticsAsync(brandId, reportDate);
+
+        Assert.IsNull(actual);
+    }
+
 
     [Test]
     public async Task Query_Marketing_Report_By_Query_Date()

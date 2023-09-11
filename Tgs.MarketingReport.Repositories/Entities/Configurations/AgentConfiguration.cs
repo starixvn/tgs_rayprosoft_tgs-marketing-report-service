@@ -71,9 +71,7 @@ namespace Tgs.MarketingReport.Repositories.Entities.Configurations
 
             entity.Property(e => e.Password).HasColumnName("password");
 
-            entity.Property(e => e.Path)
-                .HasColumnName("path")
-                .HasDefaultValueSql("''::ltree");
+            entity.Property(e => e.Path).HasColumnName("path");
 
             entity.Property(e => e.Phone)
                 .HasMaxLength(32)
@@ -128,7 +126,6 @@ namespace Tgs.MarketingReport.Repositories.Entities.Configurations
             entity.HasOne(d => d.ParentAgent)
                 .WithMany(p => p.InverseParentAgent)
                 .HasForeignKey(d => d.ParentAgentId)
-                .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("fk_agents_parent_agent_id");
 
             OnConfigurePartial(entity);
