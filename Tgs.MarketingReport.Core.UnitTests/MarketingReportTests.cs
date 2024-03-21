@@ -44,7 +44,7 @@ public class MarketingReportTests
 
         var query = new PlayerGamingDetailQuery(Guid.NewGuid(), DateOnly.Parse("2022-8-15"));
 
-        await sut.QueryAsync(query).ToArrayAsync();
+        _ = await sut.QueryAsync(query).ToArrayAsync();
 
         _ = fakeTgsRepository.Received(1)
             .QueryPlayerGamingStatisticsAsync(Arg.Is(query.BrandId), Arg.Is(query.ReportDate));
@@ -60,12 +60,12 @@ public class MarketingReportTests
 
         var query = new PlayerGamingDetailQuery(Guid.NewGuid(), DateOnly.Parse("2022-8-15"));
 
-        fakeSystemClock.UtcNow.Returns(
+        _ = fakeSystemClock.UtcNow.Returns(
             new DateTimeOffset(
                 query.ReportDate.AddDays(1).ToDateTime(TimeOnly.Parse("07:59:00"), DateTimeKind.Unspecified),
                 TimeSpan.FromHours(8)).ToOffset(TimeSpan.Zero));
 
-        await sut.QueryAsync(query).ToArrayAsync();
+        _ = await sut.QueryAsync(query).ToArrayAsync();
 
         _ = fakeTgsRepository.Received(1)
             .QueryRealTimePlayerDailyGamingStatisticsAsync(Arg.Is(query.BrandId), Arg.Is(query.ReportDate));
@@ -81,12 +81,12 @@ public class MarketingReportTests
 
         var query = new PlayerGamingDetailQuery(Guid.NewGuid(), DateOnly.Parse("2022-8-15"));
 
-        fakeSystemClock.UtcNow.Returns(
+        _ = fakeSystemClock.UtcNow.Returns(
             new DateTimeOffset(
                 query.ReportDate.AddDays(1).ToDateTime(TimeOnly.Parse("08:00:00"), DateTimeKind.Unspecified),
                 TimeSpan.FromHours(8)).ToOffset(TimeSpan.Zero));
 
-        await sut.QueryAsync(query).ToArrayAsync();
+        _ = await sut.QueryAsync(query).ToArrayAsync();
 
         _ = fakeTgsRepository.Received(1)
             .QueryPlayerGamingStatisticsAsync(Arg.Is(query.BrandId), Arg.Is(query.ReportDate));
@@ -107,7 +107,7 @@ public class MarketingReportTests
                 query.ReportDate.ToDateTime(TimeOnly.Parse("00:00:00"), DateTimeKind.Unspecified),
                 TimeSpan.FromHours(8)).ToOffset(TimeSpan.Zero));
 
-        await sut.QueryAsync(query).ToArrayAsync();
+        _ = await sut.QueryAsync(query).ToArrayAsync();
 
         _ = fakeTgsRepository.Received(1)
             .QueryRealTimePlayerDailyGamingStatisticsAsync(Arg.Is(query.BrandId), Arg.Is(query.ReportDate));
@@ -123,12 +123,12 @@ public class MarketingReportTests
 
         var query = new PlayerGamingDetailQuery(Guid.NewGuid(), DateOnly.Parse("2022-8-15"));
 
-        fakeSystemClock.UtcNow.Returns(
+        _ = fakeSystemClock.UtcNow.Returns(
             new DateTimeOffset(
                 query.ReportDate.ToDateTime(TimeOnly.Parse("08:00:00"), DateTimeKind.Unspecified),
                 TimeSpan.FromHours(8)).ToOffset(TimeSpan.Zero));
 
-        await sut.QueryAsync(query).ToArrayAsync();
+        _ = await sut.QueryAsync(query).ToArrayAsync();
 
         _ = fakeTgsRepository.Received(1)
             .QueryRealTimePlayerDailyGamingStatisticsAsync(Arg.Is(query.BrandId), Arg.Is(query.ReportDate));
@@ -143,7 +143,7 @@ public class MarketingReportTests
 
         var query = new PlayerRegisterDetailQuery(Guid.NewGuid(), DateOnly.Parse("2022-8-15"));
 
-        await sut.QueryAsync(query).ToArrayAsync();
+        _ = await sut.QueryAsync(query).ToArrayAsync();
 
         _ = fakeTgsRepository.Received(1)
             .QueryPlayerDailyRegisterStatisticsAsync(Arg.Is(query.BrandId), Arg.Is(query.ReportDate));
@@ -164,7 +164,7 @@ public class MarketingReportTests
                 query.ReportDate.AddDays(1).ToDateTime(TimeOnly.Parse("07:59:00"), DateTimeKind.Unspecified),
                 TimeSpan.FromHours(8)).ToOffset(TimeSpan.Zero));
 
-        await sut.QueryAsync(query).ToArrayAsync();
+        _ = await sut.QueryAsync(query).ToArrayAsync();
 
         _ = fakeTgsRepository.Received(1)
             .QueryRealTimePlayerDailyRegisterStatisticsAsync(Arg.Is(query.BrandId), Arg.Is(query.ReportDate));
@@ -185,7 +185,7 @@ public class MarketingReportTests
                 query.ReportDate.AddDays(1).ToDateTime(TimeOnly.Parse("08:00:00"), DateTimeKind.Unspecified),
                 TimeSpan.FromHours(8)).ToOffset(TimeSpan.Zero));
 
-        await sut.QueryAsync(query).ToArrayAsync();
+        _ = await sut.QueryAsync(query).ToArrayAsync();
 
         _ = fakeTgsRepository.Received(1)
             .QueryPlayerDailyRegisterStatisticsAsync(Arg.Is(query.BrandId), Arg.Is(query.ReportDate));
@@ -206,7 +206,7 @@ public class MarketingReportTests
                 query.ReportDate.ToDateTime(TimeOnly.Parse("00:00:00"), DateTimeKind.Unspecified),
                 TimeSpan.FromHours(8)).ToOffset(TimeSpan.Zero));
 
-        await sut.QueryAsync(query).ToArrayAsync();
+        _ = await sut.QueryAsync(query).ToArrayAsync();
 
         _ = fakeTgsRepository.Received(1)
             .QueryRealTimePlayerDailyRegisterStatisticsAsync(Arg.Is(query.BrandId), Arg.Is(query.ReportDate));
@@ -227,7 +227,7 @@ public class MarketingReportTests
                 query.ReportDate.ToDateTime(TimeOnly.Parse("08:00:00"), DateTimeKind.Unspecified),
                 TimeSpan.FromHours(8)).ToOffset(TimeSpan.Zero));
 
-        await sut.QueryAsync(query).ToArrayAsync();
+        _ = await sut.QueryAsync(query).ToArrayAsync();
 
         _ = fakeTgsRepository.Received(1)
             .QueryRealTimePlayerDailyRegisterStatisticsAsync(Arg.Is(query.BrandId), Arg.Is(query.ReportDate));

@@ -1,6 +1,7 @@
 ﻿using EntityFrameworkCore.Testing.NSubstitute.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
+using NUnit.Framework.Legacy;
 using Tgs.MarketingReport.Client;
 using Tgs.MarketingReport.Core.Cache;
 using Tgs.MarketingReport.Repositories.Entities;
@@ -59,10 +60,10 @@ internal class MarketingReportTests
                 BrandId = brandId,
                 DefaultWalletId = Guid.NewGuid(),
                 InvitationCode = "123456",
-                Password = Array.Empty<byte>(),
-                Salt = Array.Empty<byte>(),
-                WithdrawPassword = Array.Empty<byte>(),
-                WithdrawSalt = Array.Empty<byte>()
+                Password = [],
+                Salt = [],
+                WithdrawPassword = [],
+                WithdrawSalt = []
             },
             new Agent
             {
@@ -72,10 +73,10 @@ internal class MarketingReportTests
                 BrandId = brandId,
                 DefaultWalletId = Guid.NewGuid(),
                 InvitationCode = "123456",
-                Password = Array.Empty<byte>(),
-                Salt = Array.Empty<byte>(),
-                WithdrawPassword = Array.Empty<byte>(),
-                WithdrawSalt = Array.Empty<byte>()
+                Password = [],
+                Salt = [],
+                WithdrawPassword = [],
+                WithdrawSalt = []
             });
 
         await dbContext.MarketingReportDailyAggregates.AddRangeAsync(
@@ -180,10 +181,10 @@ internal class MarketingReportTests
                 BrandId = brandId,
                 DefaultWalletId = Guid.NewGuid(),
                 InvitationCode = "123456",
-                Password = Array.Empty<byte>(),
-                Salt = Array.Empty<byte>(),
-                WithdrawPassword = Array.Empty<byte>(),
-                WithdrawSalt = Array.Empty<byte>()
+                Password = [],
+                Salt = [],
+                WithdrawPassword = [],
+                WithdrawSalt = []
             });
 
         await dbContext.MarketingReportDailyAggregates.AddRangeAsync(
@@ -261,12 +262,12 @@ internal class MarketingReportTests
         var actual = await sut
             .QueryBrandMarketingStatisticsAsync(brandId, reportDate);
 
-        Assert.NotNull(actual);
-        Assert.AreEqual(brandId, actual!.BrandId);
-        Assert.AreEqual(1, actual.DirectlyGamingCount);
-        Assert.AreEqual(2, actual.DirectlyRegisterCount);
-        Assert.AreEqual(3, actual.TotalGamingCount);
-        Assert.AreEqual(4, actual.TotalRegisterCount);
+        ClassicAssert.NotNull(actual);
+        ClassicAssert.AreEqual(brandId, actual!.BrandId);
+        ClassicAssert.AreEqual(1, actual.DirectlyGamingCount);
+        ClassicAssert.AreEqual(2, actual.DirectlyRegisterCount);
+        ClassicAssert.AreEqual(3, actual.TotalGamingCount);
+        ClassicAssert.AreEqual(4, actual.TotalRegisterCount);
     }
 
     [Test]
@@ -282,10 +283,10 @@ internal class MarketingReportTests
         var reportDate = DateOnly.Parse("2022-6-24");
 
         var dbContext = web.Services.GetRequiredService<TgsContext>();
-       
+
         var actual = await sut.QueryBrandMarketingStatisticsAsync(brandId, reportDate);
 
-        Assert.IsNull(actual);
+        ClassicAssert.IsNull(actual);
     }
 
 
@@ -364,7 +365,7 @@ internal class MarketingReportTests
 
         var dbContext = web.Services.GetRequiredService<TgsContext>();
 
-        dbContext.Set<PlayerGamingItem>().AddFromSqlInterpolatedResult(
+        _ = dbContext.Set<PlayerGamingItem>().AddFromSqlInterpolatedResult(
             new[] {
                 new PlayerGamingItem(
                     "test1",
@@ -379,8 +380,8 @@ internal class MarketingReportTests
             .QueryPlayerGamingDetailAsync(brandId, reportDate)
             .ToArrayAsync();
 
-        Assert.AreEqual(1, actual.Length);
-        Assert.AreEqual("test1", actual[0].PlayerCode);
+        ClassicAssert.AreEqual(1, actual.Length);
+        ClassicAssert.AreEqual("test1", actual[0].PlayerCode);
     }
 
     [Test]
@@ -397,7 +398,7 @@ internal class MarketingReportTests
 
         var dbContext = web.Services.GetRequiredService<TgsContext>();
 
-        dbContext.Set<PlayerRegisterItem>().AddFromSqlInterpolatedResult(
+        _ = dbContext.Set<PlayerRegisterItem>().AddFromSqlInterpolatedResult(
             new[] {
                 new PlayerRegisterItem(
                     "test1",
@@ -412,7 +413,7 @@ internal class MarketingReportTests
             .QueryPlayerRegisterDetailAsync(brandId, reportDate)
             .ToArrayAsync();
 
-        Assert.AreEqual(1, actual.Length);
-        Assert.AreEqual("test1", actual[0].PlayerCode);
+        ClassicAssert.AreEqual(1, actual.Length);
+        ClassicAssert.AreEqual("test1", actual[0].PlayerCode);
     }
 }

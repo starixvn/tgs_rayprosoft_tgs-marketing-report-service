@@ -3,15 +3,10 @@ using Tgs.MarketingReport.Repositories.Entities;
 
 namespace Tgs.MarketingReport.Repositories;
 
-internal class TgsRepository : ITgsRepository
+internal class TgsRepository(
+    TgsContext context) : ITgsRepository
 {
-    private readonly TgsContext _context;
-
-    public TgsRepository(
-        TgsContext context)
-    {
-        _context = context ?? throw new ArgumentNullException(nameof(context));
-    }
+    private readonly TgsContext _context = context ?? throw new ArgumentNullException(nameof(context));
 
     public IAsyncEnumerable<AgentMarketingStatistics> GetDailyAggregateInfosAsync(
         Guid brandId,
@@ -33,14 +28,14 @@ internal class TgsRepository : ITgsRepository
         DateOnly queryLatestDate,
         CancellationToken cancellationToken = default)
     {
-        var dateRange = (
-            From: queryLatestDate.AddDays(-91),
-            To: queryLatestDate);
+        var (from, to) = (
+            queryLatestDate.AddDays(-91),
+            queryLatestDate);
 
         var query = _context.AgentDailyMarketingStatistics.AsQueryable()
             .Where(row => row.BrandId == brandId
-                && row.ReportDate >= dateRange.From
-                && row.ReportDate < dateRange.To)
+                && row.ReportDate >= from
+                && row.ReportDate < to)
             .Select(row => new AgentMarketingStatistics(
                 row.AgentId,
                 row.ReportDate,
@@ -53,7 +48,7 @@ internal class TgsRepository : ITgsRepository
     }
 
     public async ValueTask<BrandMarketingStatistics?> QueryBrandMarketingStatisticAsync(Guid brandId, DateOnly queryDate, CancellationToken cancellationToken = default)
-    {    
+    {
         var query = _context.BrandDailyMarketingStatistics.AsQueryable()
             .Where(row => row.BrandId == brandId
                 && row.ReportDate == queryDate)

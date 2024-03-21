@@ -1,9 +1,10 @@
-using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using NSubstitute;
 using Tgs.ServiceUtility;
 using Tgs.MarketingReport.ApplicationServices;
 using Tgs.MarketingReport;
+using NUnit.Framework.Legacy;
 
 namespace Tgs.MarketingReport.Core.Cache.UnitTests;
 

@@ -1,7 +1,8 @@
+﻿using FluentdForward.OpenTelemetry.MessagePack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 using OpenTelemetry.Exporter;
-using OpenTelemetry.Instrumentation.AspNetCore;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
@@ -19,9 +20,15 @@ builder.Logging
         _ = options.AddFluentdForwardExporter(fluentOptions =>
         {
             var nodeIp = builder.Configuration.GetValue<string>("NODE_IP");
-            fluentOptions.Host = nodeIp;
-            fluentOptions.Tag = builder.Configuration.GetValue<string>("OTEL_SERVICE_NAME");
-            fluentOptions.UseMessagePack();
+            fluentOptions.Host = nodeIp!;
+            fluentOptions.Tag = builder.Configuration.GetValue<string>("OTEL_SERVICE_NAME")!;
+            fluentOptions.UseMessagePack(LogRecordFormatterResolver.GetResolverInstanceWithExtendInfo(
+                "MachineInfo",
+                () => new
+                {
+                    Environment.MachineName
+                })
+);
         });
     });
 
@@ -41,9 +48,9 @@ builder.Services
 
 builder.Services
     .AddRouting(options => options.LowercaseUrls = true)
-    .AddControllers(options => options.UseDateOnlyTimeOnlyStringConverters())
-    .AddJsonOptions(options => options.UseDateOnlyTimeOnlyStringConverters());
+    .AddControllers();
 
+var excludeExtensions = new[] { "html", "ico", "png", "jpg" };
 builder.Services
     .AddSingleton<IConfigureOptions<OtlpExporterOptions>>(
         sp => new ConfigureNamedOptions<OtlpExporterOptions>(
@@ -58,29 +65,29 @@ builder.Services
 
                 config.GetSection("Opentelemetry:Tracing").Bind(exporterOptions);
             }))
-    .AddOpenTelemetryTracing(traceBuilder => traceBuilder
+    .AddOpenTelemetry()
+    .WithTracing(traceBuilder => traceBuilder
         .SetResourceBuilder(ResourceBuilder.CreateDefault().AddEnvironmentVariableDetector())
         .AddSource("Tgs.*")
         .AddSource("TGS.*")
-        .AddAspNetCoreInstrumentation()
+        .AddAspNetCoreInstrumentation(options => options.Filter =
+            httpContext => !httpContext.Request.Path.HasValue
+                || !httpContext.Request.Path.StartsWithSegments("/swagger")
+                && !httpContext.Request.Path.StartsWithSegments("/healthz")
+                && !httpContext.Request.Path.StartsWithSegments("/profiler/")
+                && !excludeExtensions.Any(
+                    ext => httpContext.Request.Path.Value.EndsWith($".{ext}")))
         .AddHttpClientInstrumentation()
         .AddProfileViewExporter()
         .AddOtlpExporter())
-    .AddProfileViewer()
-    .Configure<AspNetCoreInstrumentationOptions>(options =>
-    {
-        options.Filter = httpContext =>
-        {
-            return !httpContext.Request.Path.HasValue
-                   || !httpContext.Request.Path.StartsWithSegments("/swagger")
-                   && !httpContext.Request.Path.StartsWithSegments("/healthz")
-                   && !httpContext.Request.Path.StartsWithSegments("/profiler/")
-                   && !new[] { "html", "ico", "png", "jpg" }.Any(
-                       ext => httpContext.Request.Path.Value.EndsWith($".{ext}"));
-        };
-    });
+    .Services
+    .AddProfileViewer();
 
-builder.Services.AddSwaggerGen(c => c.UseDateOnlyTimeOnlyStringConverters());
+builder.Services.AddSwaggerGen(
+    c =>
+    {
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "Tgs.MarketingReportService", Version = "v1" });
+    });
 
 builder.Services.AddHealthChecks();
 

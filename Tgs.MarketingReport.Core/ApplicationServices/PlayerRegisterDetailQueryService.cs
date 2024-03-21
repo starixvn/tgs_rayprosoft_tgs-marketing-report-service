@@ -2,16 +2,10 @@
 
 namespace Tgs.MarketingReport.ApplicationServices;
 
-internal class PlayerRegisterDetailQueryService : IQueryService<PlayerRegisterDetailQuery, PlayerRegisterItem>
+internal class PlayerRegisterDetailQueryService(ITgsRepository tgsRepository, ISystemClock systemClock) : IQueryService<PlayerRegisterDetailQuery, PlayerRegisterItem>
 {
-    private readonly ISystemClock _systemClock;
-    private readonly ITgsRepository _tgsRepository;
-
-    public PlayerRegisterDetailQueryService(ITgsRepository tgsRepository, ISystemClock systemClock)
-    {
-        _tgsRepository = tgsRepository ?? throw new ArgumentNullException(nameof(tgsRepository));
-        _systemClock = systemClock ?? throw new ArgumentNullException(nameof(systemClock));
-    }
+    private readonly ISystemClock _systemClock = systemClock ?? throw new ArgumentNullException(nameof(systemClock));
+    private readonly ITgsRepository _tgsRepository = tgsRepository ?? throw new ArgumentNullException(nameof(tgsRepository));
 
     public IAsyncEnumerable<PlayerRegisterItem> QueryAsync(PlayerRegisterDetailQuery query, CancellationToken cancellationToken = default)
     {

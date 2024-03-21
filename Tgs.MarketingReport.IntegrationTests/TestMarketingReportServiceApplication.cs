@@ -13,14 +13,9 @@ namespace Tgs.MarketingReport.IntegrationTests;
 
 extern alias MarketingReportSvc;
 
-internal class TestMarketingReportServiceApplication : WebApplicationFactory<MarketingReportSvc.Program>
+internal class TestMarketingReportServiceApplication(Action<IWebHostBuilder>? webHostConfigure = null) : WebApplicationFactory<MarketingReportSvc.Program>
 {
-    private readonly Action<IWebHostBuilder>? _webHostConfigure;
-
-    public TestMarketingReportServiceApplication(Action<IWebHostBuilder>? webHostConfigure = null)
-    {
-        _webHostConfigure = webHostConfigure;
-    }
+    private readonly Action<IWebHostBuilder>? _webHostConfigure = webHostConfigure;
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {

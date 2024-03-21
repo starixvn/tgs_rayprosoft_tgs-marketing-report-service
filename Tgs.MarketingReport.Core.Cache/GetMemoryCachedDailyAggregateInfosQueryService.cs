@@ -7,26 +7,18 @@ using Tgs.MarketingReport;
 
 namespace Tgs.MarketingReport.Core.Cache;
 
-internal class GetMemoryCachedDailyAggregateInfosQueryService : IQueryService<GetDailyAggregateInfosQuery, AgentMarketingStatistics>
+internal class GetMemoryCachedDailyAggregateInfosQueryService(
+    IOptions<ScheduleOptions> options,
+    IQueryService<GetDailyAggregateInfosQuery, AgentMarketingStatistics> sourceService,
+    IMemoryCache memoryCache,
+    ISystemClock systemClock) : IQueryService<GetDailyAggregateInfosQuery, AgentMarketingStatistics>
 {
     private static readonly TimeSpan _Offset = TimeSpan.FromHours(8D);
 
-    private readonly IMemoryCache _memoryCache;
-    private readonly ScheduleOptions _scheduleOptions;
-    private readonly IQueryService<GetDailyAggregateInfosQuery, AgentMarketingStatistics> _sourceService;
-    private readonly ISystemClock _systemClock;
-
-    public GetMemoryCachedDailyAggregateInfosQueryService(
-        IOptions<ScheduleOptions> options,
-        IQueryService<GetDailyAggregateInfosQuery, AgentMarketingStatistics> sourceService,
-        IMemoryCache memoryCache,
-        ISystemClock systemClock)
-    {
-        _scheduleOptions = options.Value;
-        _sourceService = sourceService ?? throw new ArgumentNullException(nameof(sourceService));
-        _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
-        _systemClock = systemClock ?? throw new ArgumentNullException(nameof(systemClock));
-    }
+    private readonly IMemoryCache _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
+    private readonly ScheduleOptions _scheduleOptions = options.Value;
+    private readonly IQueryService<GetDailyAggregateInfosQuery, AgentMarketingStatistics> _sourceService = sourceService ?? throw new ArgumentNullException(nameof(sourceService));
+    private readonly ISystemClock _systemClock = systemClock ?? throw new ArgumentNullException(nameof(systemClock));
 
     public async IAsyncEnumerable<AgentMarketingStatistics> QueryAsync(GetDailyAggregateInfosQuery query,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
@@ -70,11 +62,9 @@ internal class GetMemoryCachedDailyAggregateInfosQueryService : IQueryService<Ge
             return infos;
         }).ConfigureAwait(false);
 
-        foreach (var info in aggregateInfos
-                     .Where(info => info.ReportDate >= query.StartDate &&
-                                    info.ReportDate < query.EndDate))
-        {
+        foreach (var info in aggregateInfos!
+            .Where(info => info.ReportDate >= query.StartDate
+                && info.ReportDate < query.EndDate))
             yield return info;
-        }
     }
 }

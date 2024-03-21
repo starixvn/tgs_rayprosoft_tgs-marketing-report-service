@@ -4,16 +4,11 @@ using Tgs.MarketingReport.ApplicationServices;
 
 namespace Tgs.MarketingReport.ApplicationServices;
 
-internal class GetDailyAggregateInfosByAgentQueryService
-    : IQueryService<GetDailyAggregateInfosByAgentQuery, AgentMarketingStatistics>
+internal class GetDailyAggregateInfosByAgentQueryService(
+    IQueryService<GetDailyAggregateInfosQuery, AgentMarketingStatistics> queryService)
+        : IQueryService<GetDailyAggregateInfosByAgentQuery, AgentMarketingStatistics>
 {
-    private readonly IQueryService<GetDailyAggregateInfosQuery, AgentMarketingStatistics> _queryService;
-
-    public GetDailyAggregateInfosByAgentQueryService(
-        IQueryService<GetDailyAggregateInfosQuery, AgentMarketingStatistics> queryService)
-    {
-        _queryService = queryService ?? throw new ArgumentNullException(nameof(queryService));
-    }
+    private readonly IQueryService<GetDailyAggregateInfosQuery, AgentMarketingStatistics> _queryService = queryService ?? throw new ArgumentNullException(nameof(queryService));
 
     public async IAsyncEnumerable<AgentMarketingStatistics> QueryAsync(GetDailyAggregateInfosByAgentQuery query,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)

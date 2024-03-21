@@ -1,0 +1,12 @@
+﻿
+# All files
+[*]
+indent_style = space
+
+# Xml files
+
+# NUnit2049: Consider using Assert.That(...) instead of CollectionAssert(...)
+dotnet_diagnostic.NUnit2049.severity = none
+
+[*.xml]
+indent_size = 2

@@ -9,10 +9,10 @@ public partial class TgsContext
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder)
 #pragma warning restore CA1822 // 將成員標記為靜態
     {
-        modelBuilder.Entity<PlayerRegisterItem>()
+        _ = modelBuilder.Entity<PlayerRegisterItem>()
             .HasNoKey();
 
-        modelBuilder.Entity<PlayerGamingItem>()
+        _ = modelBuilder.Entity<PlayerGamingItem>()
             .HasNoKey();
     }
 }
