@@ -156,7 +156,7 @@ internal class TgsRepository : ITgsRepository
                     AND
                     PGA.report_date = {reportDateTime}
                     AND
-                    P.agent_id IS NOT NULL
+                    PGA.agent_id IS NOT NULL
                 GROUP BY
                     PGA.agent_id,
                     PGA.player_code,

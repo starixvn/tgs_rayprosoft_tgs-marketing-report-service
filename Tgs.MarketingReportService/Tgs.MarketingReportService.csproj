@@ -10,6 +10,7 @@
     <GlobalNugetConfig Condition="'$(UserProfile)'==''">$(HOME)/.nuget/NuGet/NuGet.Config</GlobalNugetConfig>
     <DockerfileBuildArguments>--build-arg "BuildConfiguration=$(Configuration)" --secret id=nuget,src="$(GlobalNugetConfig)"</DockerfileBuildArguments>
     <DockerfileTag Condition="$(DockerfileTag) == ''">marketing-report-api</DockerfileTag>
+    <SqlQueryToolsConnectionString />
   </PropertyGroup>
 
   <ItemGroup>
