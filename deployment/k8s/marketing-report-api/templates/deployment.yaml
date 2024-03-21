@@ -49,17 +49,11 @@ spec:
                   key: tgs
             - name: Schedule__ExecuteTime
               value: 06:00:00
-            - name: DOTNET_DiagnosticPorts
-              value: /diag/port
           volumeMounts:
             - mountPath: /config/appsettings.json
               name: appsettings
               readOnly: true
               subPath: appsettings.json
-            - mountPath: /diag
-              name: diagvol
-            - mountPath: /dumps
-              name: dumpsvol
           ports:
             - name: http
               containerPort: 8080
@@ -125,10 +119,6 @@ spec:
         - name: appsettings
           configMap:
             name: configmap-{{ include "marketing-report-api.fullname" . }}
-        - name: diagvol
-          emptyDir: {}
-        - name: dumpsvol
-          emptyDir: {}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
