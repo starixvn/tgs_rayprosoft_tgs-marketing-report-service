@@ -3,14 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Exporter;
+using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Configuration
-    .AddJsonFile("/config/appsettings.json", true)
-    .AddEnvironmentVariables();
 
 builder.Logging
     .AddOpenTelemetry(options =>
@@ -70,6 +67,7 @@ builder.Services
         .SetResourceBuilder(ResourceBuilder.CreateDefault().AddEnvironmentVariableDetector())
         .AddSource("Tgs.*")
         .AddSource("TGS.*")
+        .AddSource("Valhalla.*")
         .AddAspNetCoreInstrumentation(options => options.Filter =
             httpContext => !httpContext.Request.Path.HasValue
                 || !httpContext.Request.Path.StartsWithSegments("/swagger")
@@ -79,6 +77,12 @@ builder.Services
                     ext => httpContext.Request.Path.Value.EndsWith($".{ext}")))
         .AddHttpClientInstrumentation()
         .AddProfileViewExporter()
+        .AddOtlpExporter())
+    .WithMetrics(meterBuiler => meterBuiler
+        .SetResourceBuilder(ResourceBuilder.CreateDefault()
+            .AddEnvironmentVariableDetector())
+        .AddRuntimeInstrumentation()
+        .AddAspNetCoreInstrumentation()
         .AddOtlpExporter())
     .Services
     .AddProfileViewer();

@@ -50,7 +50,7 @@ spec:
             - name: Schedule__ExecuteTime
               value: 06:00:00
           volumeMounts:
-            - mountPath: /config/appsettings.json
+            - mountPath: /app/appsettings.Production.json
               name: appsettings
               readOnly: true
               subPath: appsettings.json
